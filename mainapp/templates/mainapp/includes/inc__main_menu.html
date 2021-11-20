@@ -1,0 +1,5 @@
+<div class="links row">
+    <div class="menu-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}"><a href="{% url 'index' %}">Главная</a></div>
+    <div class="menu-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}"><a href="{% url 'products' %}">Посуда</a></div>
+    <div class="menu-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"><a href="{% url 'contacts' %}">Контакты</a></div>
+</div>
