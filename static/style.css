@@ -112,16 +112,19 @@ html, body {
     }
 }
 
-.products-container {
+.products-container, .contacts-container {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 10px;
 }
 
-.products-container .item-container {
+.contacts-container{
+    margin: 50px 0;
+}
+
+.products-container .item-container, .contacts-container .item-container {
     width: 330px;
-    height: 330px;
     margin-top: 10px;
     margin-bottom: 10px;
     background-repeat: no-repeat;
@@ -129,7 +132,36 @@ html, body {
     background-position: center;
     display: flex;
     flex-direction: column;
+}
+
+.products-container .item-container{
     justify-content: flex-end;
+    height: 330px;
+}
+
+.contacts-container .item-container{
+    border: 1px solid #826756;
+    padding: 20px;
+}
+
+.contacts-container .item-container .city{
+    font-family: 'micra', sans-serif;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.contacts-container .item-container .phone{
+    margin-bottom: 20px;
+}
+
+.contacts-container .item-container .email a{
+    color: #826756;
+    transition: .3s;
+    text-decoration: none;
+}
+
+.contacts-container .item-container .email a:hover{
+    border-bottom: 1px solid #826756;
 }
 
 .products-container .item-container .title {
@@ -142,26 +174,28 @@ html, body {
 }
 
 @media (max-width: 1100px) {
-    .products-container .item-container {
+    .products-container .item-container, .contacts-container .item-container {
         margin-left: 10px;
         margin-right: 10px;
     }
 
-    .products-container {
+    .products-container, .contacts-container {
         justify-content: center;
     }
 }
 
 @media (max-width: 800px) {
-    .products-container .item-container {
+    .products-container .item-container, .contacts-container .item-container {
         width: 300px;
-        height: 300px;
         max-width: 100%;
+    }
+    .products-container .item-container {
+        height: 300px;
     }
 }
 
 @media (max-width: 500px) {
-    .products-container .item-container {
+    .products-container .item-container, .contacts-container .item-container {
         margin-left: 0;
         margin-right: 0;
     }
@@ -181,10 +215,6 @@ html, body {
 
 .main-img {
     max-width: 100%;
-}
-
-.contacts-container {
-    margin: 50px 0;
 }
 
 .footer-container {

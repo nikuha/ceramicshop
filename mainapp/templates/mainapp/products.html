@@ -12,13 +12,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="inner-container">
-        <div class="products-container">
-            {% for product in products %}
-                <div class="item-container" style="background-image: url('{{ product.img }}')">
-                    <div class="title">{{ product.name }}</div>
-                </div>
-            {% endfor %}
-        </div>
+    <div class="products-container">
+        {% for product in products %}
+            <div class="item-container" style="background-image: url('{{ product.img }}')">
+                <div class="title">{{ product.name }}</div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

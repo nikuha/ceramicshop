@@ -3,6 +3,12 @@
 
 {% block content %}
     <div class="contacts-container">
-        Содержимое контактов
+            {% for contact in contacts %}
+                <div class="item-container">
+                    <div class="city">{{ contact.city }}</div>
+                    <div class="phone">{{ contact.phone }}</div>
+                    <div class="email"><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></div>
+                </div>
+            {% endfor %}
     </div>
 {% endblock %}
