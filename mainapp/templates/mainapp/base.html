@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title|title }}</title>
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
+</head>
+<body>
+<div class="wrapper-container column">
+    <div class="top-container">
+        <div class="inner-container">
+            <div class="logo-container row">
+                <div><a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt=""></a></div>
+                <div class="title center">Керамическая посуда<br> ручной работы</div>
+            </div>
+            {% include 'mainapp/includes/inc__main_menu.html' %}
+        </div>
+    </div>
+    <div class="middle-container {{ content_class }}">
+        {% block products_menu %}{% endblock %}
+        <div class="inner-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <div class="footer-container">
+        <div class="inner-container center">
+            Сочи, Красная Поляна @ Керамика Сочи {% now 'Y' %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

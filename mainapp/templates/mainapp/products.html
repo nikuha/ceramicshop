@@ -1,64 +1,22 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Керамика ручной работы</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-<div class="wrapper-container column">
-    <div class="top-container">
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block products_menu %}
+    <div class="products-menu">
         <div class="inner-container">
-            <div class="logo-container row">
-                <div><img src="/static/img/logo.png" alt=""></div>
-                <div class="title center">Керамическая посуда<br> ручной работы</div>
-            </div>
-            <div class="links row">
-                <div class="menu-link"><a href="/">Главная</a></div>
-                <div class="menu-link active">Посуда</div>
-                <div class="menu-link"><a href="/contacts/">Контакты</a></div>
-            </div>
+            {% for section in sections %}
+                <div class="item">{{ section.name }}</div>
+            {% endfor %}
         </div>
     </div>
-    <div class="middle-container">
-        <div class="products-menu">
-            <div class="inner-container">
-                <div class="item">Чайные чашки</div>
-                <div class="item">Кофейные чашки</div>
-                <div class="item active">Блюда</div>
-                <div class="item">Наборы</div>
-                <div class="item">Для ванной</div>
+{% endblock %}
+
+{% block content %}
+    <div class="products-container">
+        {% for product in products %}
+            <div class="item-container" style="background-image: url('{{ product.img }}')">
+                <div class="title">{{ product.name }}</div>
             </div>
-        </div>
-        <div class="inner-container">
-            <div class="products-container">
-                <div class="item-container" style="background-image: url('/static/img/01.jpg')">
-                    <div class="title">Пиала для меда</div>
-                </div>
-                <div class="item-container" style="background-image: url('/static/img/02.jpg')">
-                    <div class="title">Чашечка для меда</div>
-                </div>
-                <div class="item-container" style="background-image: url('/static/img/03.jpg')">
-                    <div class="title">Чашка для варенья</div>
-                </div>
-                <div class="item-container" style="background-image: url('/static/img/04.jpg')">
-                    <div class="title">Набор мисок</div>
-                </div>
-                <div class="item-container" style="background-image: url('/static/img/05.jpg')">
-                    <div class="title">Салатница "Рыба"</div>
-                </div>
-                <div class="item-container" style="background-image: url('/static/img/06.jpg')">
-                    <div class="title">Салатница "Осень"</div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    <div class="footer-container">
-        <div class="inner-container center">
-            Сочи, Красная Поляна
-        </div>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}
