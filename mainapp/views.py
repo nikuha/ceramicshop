@@ -1,62 +1,63 @@
 import json
 
 from django.shortcuts import render
-from django.templatetags.static import static
+from mainapp.models import ProductCategory, Product, Contact
 
 
-# Create your views here.
 def index(request):
     context = {
         'page_title': 'главная',
-        'content_class': 'main-page'
+        'content_class': 'main-page',
+        'main_path': main_path(request)
     }
     return render(request, 'mainapp/index.html', context)
 
 
 def products(request):
-    # создание json файла
-    # sections = [
-    #     {'name': 'Чайные чашки'},
-    #     {'name': 'Кофейные чашки'},
-    #     {'name': 'Блюда'},
-    #     {'name': 'Наборы'},
-    #     {'name': 'Для ванной'},
-    # ]
-    # items = [
-    #     {'name': 'Пиала для меда', 'img': static('img/01.jpg')},
-    #     {'name': 'Чашечка для меда', 'img': static('img/02.jpg')},
-    #     {'name': 'Чашка для варенья', 'img': static('img/03.jpg')},
-    #     {'name': 'Набор мисок', 'img': static('img/04.jpg')},
-    #     {'name': 'Салатница "Рыба"', 'img': static('img/05.jpg')},
-    #     {'name': 'Салатница "Осень"', 'img': static('img/06.jpg')}
-    # ]
-    # with open('mainapp/data/sections.json', 'w') as f:
-    #     f.write(json.dumps(sections))
-    # with open('mainapp/data/products.json', 'w') as f:
-    #     f.write(json.dumps(items))
-
-    # чтение из json файла
-    with open('mainapp/data/sections.json') as json_file:
-        sections = json.load(json_file)
-    with open('mainapp/data/products.json') as json_file:
-        items = json.load(json_file)
+    categories = ProductCategory.objects.all()
+    products = Product.objects.all()
 
     context = {
         'page_title': 'посуда',
-        'sections': sections,
-        'products': items
+        'categories': categories,
+        'products': products,
+        'main_path': main_path(request)
     }
     return render(request, 'mainapp/products.html', context)
 
 
+def product(request, pk=None):
+    categories = ProductCategory.objects.all()
+    product = Product.objects.get(pk=pk)
+
+    context = {
+        'page_title': product.name,
+        'categories': categories,
+        'product': product,
+        'main_path': main_path(request)
+    }
+    return render(request, 'mainapp/product.html', context)
+
+
 def contacts(request):
-    items = [
-        {'city': 'Сочи', 'phone': '+7 (918) 555-55-55', 'email': 'sochi@ceramicsochi.com'},
-        {'city': 'Красная Поляна', 'phone': '+7 (918) 777-77-77', 'email': 'polyana@ceramicsochi.com'},
-        {'city': 'Адлер', 'phone': '+7 (918) 888-88-88', 'email': 'adler@ceramicsochi.com'},
-    ]
+    # загрузить в базу контакты из файла
+    # load_contacts_from_file()
+    items = Contact.objects.all()
     context = {
         'page_title': 'контакты',
-        'contacts': items
+        'contacts': items,
+        'main_path': main_path(request)
     }
     return render(request, 'mainapp/contacts.html', context)
+
+
+def load_contacts_from_file():
+    with open('mainapp/data/contacts.json') as json_file:
+        items = json.load(json_file)
+        for contact in items:
+            new_contact = Contact(city=contact['city'], phone=contact['phone'], email=contact['email'])
+            new_contact.save()
+
+
+def main_path(request):
+    return ':'.join(request.resolver_match.namespaces) + ':' + request.resolver_match.url_name

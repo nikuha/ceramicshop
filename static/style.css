@@ -119,7 +119,7 @@ html, body {
     margin-top: 10px;
 }
 
-.contacts-container{
+.contacts-container {
     margin: 50px 0;
 }
 
@@ -134,33 +134,33 @@ html, body {
     flex-direction: column;
 }
 
-.products-container .item-container{
+.products-container .item-container {
     justify-content: flex-end;
     height: 330px;
 }
 
-.contacts-container .item-container{
+.contacts-container .item-container {
     border: 1px solid #826756;
     padding: 20px;
 }
 
-.contacts-container .item-container .city{
+.contacts-container .item-container .city {
     font-family: 'micra', sans-serif;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.contacts-container .item-container .phone{
+.contacts-container .item-container .phone {
     margin-bottom: 20px;
 }
 
-.contacts-container .item-container .email a{
+.contacts-container .item-container .email a {
     color: #826756;
     transition: .3s;
     text-decoration: none;
 }
 
-.contacts-container .item-container .email a:hover{
+.contacts-container .item-container .email a:hover {
     border-bottom: 1px solid #826756;
 }
 
@@ -189,6 +189,7 @@ html, body {
         width: 300px;
         max-width: 100%;
     }
+
     .products-container .item-container {
         height: 300px;
     }
@@ -244,6 +245,10 @@ html, body {
 .margin-center {
     margin-left: auto;
     margin-right: auto;
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 @media (max-width: 1200px) {
