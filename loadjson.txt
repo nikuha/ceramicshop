@@ -1,0 +1,5 @@
+# выгрузить данные в json
+python manage.py dumpdata mainapp > mainapp_dump.json
+
+# загрузить из данных
+python manage.py loaddata mainapp_dump.json

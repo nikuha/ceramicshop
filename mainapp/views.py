@@ -40,8 +40,6 @@ def product(request, pk=None):
 
 
 def contacts(request):
-    # загрузить в базу контакты из файла
-    # load_contacts_from_file()
     items = Contact.objects.all()
     context = {
         'page_title': 'контакты',
@@ -49,14 +47,6 @@ def contacts(request):
         'main_path': main_path(request)
     }
     return render(request, 'mainapp/contacts.html', context)
-
-
-def load_contacts_from_file():
-    with open('mainapp/data/contacts.json') as json_file:
-        items = json.load(json_file)
-        for contact in items:
-            new_contact = Contact(city=contact['city'], phone=contact['phone'], email=contact['email'])
-            new_contact.save()
 
 
 def main_path(request):
