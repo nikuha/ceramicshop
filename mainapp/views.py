@@ -13,7 +13,7 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
-def products(request):
+def products(request, pk=None):
     categories = ProductCategory.objects.all()
     products = Product.objects.all()
 
@@ -21,6 +21,7 @@ def products(request):
         'page_title': 'посуда',
         'categories': categories,
         'products': products,
+        'category_id': pk,
         'main_path': main_path(request)
     }
     return render(request, 'mainapp/products.html', context)
@@ -34,6 +35,7 @@ def product(request, pk=None):
         'page_title': product.name,
         'categories': categories,
         'product': product,
+        'category_id': product.category_id,
         'main_path': main_path(request)
     }
     return render(request, 'mainapp/product.html', context)

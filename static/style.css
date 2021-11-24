@@ -96,6 +96,7 @@ html, body {
     font-size: 13px;
     margin: 0 20px;
     cursor: pointer;
+    transition: .3s;
 }
 
 .item.active, .item:hover {

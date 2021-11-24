@@ -9,6 +9,11 @@ class ProductCategory(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def url(self):
+        return reverse('mainapp:products:category', kwargs={'pk': self.id})
+
+
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name='категория')
