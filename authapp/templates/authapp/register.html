@@ -1,0 +1,17 @@
+{% extends 'mainapp/base.html' %}
+
+{% block content %}
+    <div class="form-container">
+    <div class="title">Регистрация</div>
+    <form class="base-form margin-center" action="{% url 'authapp:register' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ register_form.as_p }}
+        <p>
+            <label></label>
+            <input class="submit" type="submit" value="Зарегистрироваться">
+        </p>
+
+    </form>
+    </div>
+
+{% endblock %}
