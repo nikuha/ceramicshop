@@ -11,10 +11,7 @@ html, body {
     height: 100%;
 }
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
+input:focus, select:focus, textarea:focus, button:focus {
     outline: none;
 }
 
@@ -28,6 +25,10 @@ html {
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
+}
+
+input, select, textarea {
+    font-size: 15px;
 }
 
 .micra {
@@ -299,6 +300,7 @@ html {
 .base-form p {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     padding: 10px 0;
 }
 
@@ -312,17 +314,21 @@ html {
     padding-right: 20px;
 }
 
-.base-form p input {
+.base-form p input:not([type='checkbox']) {
     width: 50%;
     height: 30px;
     padding: 0 5px;
 }
 
-.base-form p input[type=text], .base-form p input[type=email], .base-form p input[type=password], .base-form p input[type=number] {
+.base-form p a {
+    padding-left: 50%;
+}
+
+.base-form p input:not([type=file]) {
     border: 1px solid #95a574;
 }
 
-.base-form a{
+.base-form a {
     color: #554439;
 }
 
@@ -363,7 +369,7 @@ html {
         margin-top: 20px;
     }
 
-    .base-form p label, .base-form p input {
+    .base-form p label, .base-form p input:not([type='checkbox']) {
         width: 100%;
     }
 

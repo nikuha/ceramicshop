@@ -6,10 +6,11 @@
     <div class="menu-link {% if main_path == 'mainapp:contacts' %}active{% endif %}"><a
             href="{% url 'mainapp:contacts' %}">Контакты</a></div>
 
-    <div class="menu-link {% if main_path == 'mainapp:contacts' %}active{% endif %}">|</div>
+    <div class="menu-link">|</div>
+
     {% if user.is_authenticated %}
         <div class="menu-link {% if main_path == 'authapp:edit' %}active{% endif %}"><a
-                href="{% url 'authapp:edit' %}">{{ user.username|default:'Пользователь'|title }}</a></div>
+                href="{% url 'authapp:edit' %}">{% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username }}{% endif %}</a></div>
     {% endif %}
     {% if user.is_authenticated %}
         <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
