@@ -1,7 +1,22 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600');
 
+@font-face {
+    font-family: 'micra';
+    src: url('fonts/micra.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html, body {
     height: 100%;
+}
+
+input:focus, select:focus, textarea:focus, button:focus {
+    outline: none;
+}
+
+html {
+    overflow-y: scroll;
 }
 
 * {
@@ -9,6 +24,11 @@ html, body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+}
+
+input, select, textarea {
+    font-size: 15px;
 }
 
 .micra {
@@ -23,6 +43,12 @@ html, body {
     width: 1080px;
     max-width: 100%;
     margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+    .inner-container {
+        width: calc(100% - 64px);
+    }
 }
 
 .top-container {
@@ -43,6 +69,10 @@ html, body {
     font-size: 20px;
     padding-left: 20px;
     line-height: 140%;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
 }
 
 .menu-link {
@@ -252,15 +282,101 @@ html, body {
     cursor: pointer;
 }
 
-@media (max-width: 1200px) {
-    .inner-container {
-        width: calc(100% - 64px);
-    }
+.form-container {
+    margin-top: 50px;
 }
 
-@font-face {
-    font-family: 'micra';
-    src: url('fonts/micra.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+.form-container .title {
+    margin: 30px 0;
+    font-size: 25px;
+    text-align: center;
+}
+
+.base-form {
+    width: 600px;
+    max-width: 100%;
+}
+
+.base-form p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.base-form .errorlist {
+    text-align: center;
+}
+
+.base-form p label {
+    width: 50%;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.base-form p input:not([type='checkbox']) {
+    width: 50%;
+    height: 30px;
+    padding: 0 5px;
+}
+
+.base-form p a {
+    padding-left: 50%;
+}
+
+.base-form p input:not([type=file]) {
+    border: 1px solid #95a574;
+}
+
+.base-form a {
+    color: #554439;
+}
+
+.base-form .submit {
+    border: 1px solid #95a574;
+    background-color: #95a574;
+    color: white;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.base-form .submit:hover {
+    border: 1px solid #748855;
+    background-color: #748855;
+}
+
+.base-form .errorlist li {
+    list-style: none;
+    font-size: small;
+    color: #ef9090;
+}
+
+.base-form .errorlist li {
+    list-style: none;
+    font-size: small;
+    color: #ef9090;
+}
+
+.helptext {
+    color: #929191;
+    font-size: small;
+    display: block;
+    margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .base-form p label, .base-form p input:not([type='checkbox']) {
+        width: 100%;
+    }
+
+    .base-form p label {
+        padding-right: 0;
+        padding-bottom: 10px;
+        text-align: center;
+
+    }
 }

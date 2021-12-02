@@ -15,7 +15,10 @@ def index(request):
 
 def products(request, pk=None):
     categories = ProductCategory.objects.all()
-    products = Product.objects.all()
+    if pk:
+        products = Product.objects.filter(category=pk)
+    else:
+        products = Product.objects.order_by('?').all()[:9]
 
     context = {
         'page_title': 'посуда',

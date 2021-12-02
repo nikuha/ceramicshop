@@ -14,7 +14,6 @@ class ProductCategory(models.Model):
         return reverse('mainapp:products:category', kwargs={'pk': self.id})
 
 
-
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, verbose_name='категория')
     name = models.CharField(verbose_name='имя продукта', max_length=128)
