@@ -1,0 +1,14 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block products_menu %}
+    {% include 'mainapp/includes/inc__categories_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="products-container">
+        <div class="item-container" style="background-image: url('{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/default.png' %}{% endif %}')">
+            <div class="title">{{ product.name }}</div>
+        </div>
+    </div>
+{% endblock %}
