@@ -1,6 +1,4 @@
-import json
-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from mainapp.models import ProductCategory, Product, Contact
 
 
@@ -16,7 +14,8 @@ def index(request):
 def products(request, pk=None):
     categories = ProductCategory.objects.all()
     if pk:
-        products = Product.objects.filter(category=pk)
+        category = get_object_or_404(ProductCategory, id=pk)
+        products = category.product_set.all()
     else:
         products = Product.objects.order_by('?').all()[:9]
 
@@ -52,6 +51,12 @@ def contacts(request):
         'main_path': main_path(request)
     }
     return render(request, 'mainapp/contacts.html', context)
+
+
+def handler404(request, exception=None):
+    response = render(request, "mainapp/404.html")
+    response.status_code = 404
+    return response
 
 
 def main_path(request):
