@@ -17,7 +17,8 @@ class Basket(models.Model):
 
     @property
     def total_quantity(self):
-        return sum([x.quantity for x in self.user.basket.all()])
+        # return sum([x.quantity for x in self.user.basket.all()])
+        return sum(self.user.basket.values_list('quantity', flat=True))
 
     @property
     def total_cost(self):
