@@ -1,5 +1,7 @@
 # выгрузить данные в json
 python manage.py dumpdata mainapp > mainapp_dump.json
+# выгрузить данные в json в utf-8
+python -Xutf8 manage.py dumpdata -o data.json
 
 # загрузить из данных
 python manage.py loaddata mainapp_dump.json

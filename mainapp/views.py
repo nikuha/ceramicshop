@@ -58,7 +58,7 @@ def contacts(request):
 
 
 def get_basket(request):
-    return request.user.is_authenticated and request.user.basket_set.all() or []
+    return request.user.is_authenticated and request.user.basket.all() or []
 
 
 def handler404(request, exception=None):

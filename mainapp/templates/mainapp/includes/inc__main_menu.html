@@ -15,14 +15,16 @@
     {% endif %}
     {% if user.is_authenticated %}
         <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
-        <div class="menu-link">|</div>
-        <div class="menu-link">
-            <a href="{% url 'basketapp:view' %}" class="basket">
+        {% if basket and basket|length %}
+            <div class="menu-link">|</div>
+            <div class="menu-link">
+                <a href="{% url 'basketapp:view' %}" class="basket">
                 <span>
-                    Корзина {% if basket %} ({{ basket|length }}) {% endif %}
+                    Корзина  ({{ basket.0.total_quantity }} шт. {{ basket.0.total_cost|floatformat:0 }} руб)
                 </span>
-            </a>
-        </div>
+                </a>
+            </div>
+        {% endif %}
     {% else %}
         <div class="menu-link {% if main_path == 'authapp:login' %}active{% endif %}"><a
                 href="{% url 'authapp:login' %}">Войти</a></div>
