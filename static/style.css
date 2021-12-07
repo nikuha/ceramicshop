@@ -331,6 +331,9 @@ input, select, textarea {
     text-decoration: none;
     border-radius: 5px;
 }
+.basket-summary{
+    margin: 10px 0;
+}
 
 @media (max-width: 1100px) {
     .products-container .item-container, .contacts-container .item-container {

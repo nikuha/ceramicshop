@@ -26,8 +26,11 @@
         {% endfor %}
 
         {% if basket %}
-            <div class="basket_summary">
-                В корзине {{ basket.0.total_quantity }} товаров общей стоимостью
+            <div class="basket-summary">
+                Всего товаров в корзине: {{ basket.0.total_quantity }}
+            </div>
+            <div class="basket-summary">
+                Общая стоимость:
                 {{ basket.0.total_cost|floatformat:0 }} руб
             </div>
         {% endif %}
