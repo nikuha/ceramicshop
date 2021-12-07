@@ -17,14 +17,17 @@ def products(request, pk=None):
     if pk:
         category = get_object_or_404(ProductCategory, id=pk)
         products = category.product_set.all()
+        hot_product = None
     else:
-        products = Product.objects.order_by('price').all()[:9]
+        hot_product = Product.objects.order_by('?').first()
+        products = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk).order_by('?').all()[:3]
 
     context = {
         'page_title': 'посуда',
         'categories': categories,
         'products': products,
         'category_id': pk,
+        'hot_product': hot_product,
         'main_path': main_path(request),
         'basket': get_basket(request)
     }

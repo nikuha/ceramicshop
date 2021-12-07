@@ -19,9 +19,7 @@
             <div class="menu-link">|</div>
             <div class="menu-link">
                 <a href="{% url 'basketapp:view' %}" class="basket">
-                <span>
-                    Корзина  ({{ basket.0.total_quantity }} шт. {{ basket.0.total_cost|floatformat:0 }} руб)
-                </span>
+                    {{ basket.0.total_quantity }} шт. {{ basket.0.total_cost|floatformat:0 }} руб
                 </a>
             </div>
         {% endif %}

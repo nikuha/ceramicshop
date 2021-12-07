@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.templatetags.static import static
 
 
 class ProductCategory(models.Model):
@@ -28,6 +29,14 @@ class Product(models.Model):
     @property
     def url(self):
         return reverse('mainapp:products:product', kwargs={'pk': self.id})
+
+    @property
+    def image_or_default(self):
+        return self.image.url if self.image else static('img/default.png')
+
+    @property
+    def add_to_basket_url(self):
+        return reverse('basketapp:add', kwargs={'pk': self.id})
 
 
 class Contact(models.Model):

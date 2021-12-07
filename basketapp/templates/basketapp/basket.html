@@ -1,0 +1,36 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="basket-container">
+        <div class="big-title center">Корзина</div>
+        {% for item in basket %}
+            <div class="item-container">
+                <div class="image-container pointer"
+                     style="background-image: url('{{ item.product.image_or_default }}')"
+                     onclick="document.location='{{ item.product.url }}'"></div>
+                <div class="description-container pointer column-middle"
+                     onclick="document.location='{{ item.product.url }}'">
+                    <div class="title">{{ item.product.name|title }}</div>
+                    <div class="description">{{ item.product.description }}</div>
+                </div>
+                <div class="quantity-container column-middle">
+                    <div class="quantity">{{ item.quantity }}</div>
+                </div>
+                <span class="product-cost column-middle">{{ item.product_cost|floatformat:0 }}&nbsp;руб</span>
+
+                <div class="remove-container column-middle">
+                    <div class="button"><a href="{{ item.remove_from_basket_url }}">Удалить</a></div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if basket %}
+            <div class="basket_summary">
+                В корзине {{ basket.0.total_quantity }} товаров общей стоимостью
+                {{ basket.0.total_cost|floatformat:0 }} руб
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
