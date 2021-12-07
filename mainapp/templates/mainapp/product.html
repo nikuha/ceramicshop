@@ -6,9 +6,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class="products-container">
-        <div class="item-container" style="background-image: url('{{ product.image_or_default }}')">
-            <div class="title">{{ product.name }}</div>
+        <div class="hot-product-container">
+            <div class="image-container" style="background-image: url('{{ product.image_or_default }}')">
+            </div>
+            <div class="description-container column-middle">
+                <div class="title">{{ product.name|title }}</div>
+                {% if product.description %}<div>{{ product.description }}</div>{% endif %}
+                <div class="price">{{ product.price|floatformat:0 }} руб.</div>
+                <div class="button"><a href="{{ product.add_to_basket_url }}">Заказать</a></div>
+            </div>
         </div>
-    </div>
 {% endblock %}
