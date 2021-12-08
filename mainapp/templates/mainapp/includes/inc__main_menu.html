@@ -10,10 +10,21 @@
 
     {% if user.is_authenticated %}
         <div class="menu-link {% if main_path == 'authapp:edit' %}active{% endif %}"><a
-                href="{% url 'authapp:edit' %}">{% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username }}{% endif %}</a></div>
+                href="{% url 'authapp:edit' %}">
+            {% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username }}{% endif %}</a></div>
     {% endif %}
     {% if user.is_authenticated %}
         <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
+        {% if basket %}
+            <div class="menu-link">|</div>
+            <div class="menu-link">
+                <a href="{% url 'basketapp:view' %}" class="basket">
+                <span>
+                    Корзина  ({{ basket.0.total_quantity }} шт. {{ basket.0.total_cost|floatformat:0 }} руб)
+                </span>
+                </a>
+            </div>
+        {% endif %}
     {% else %}
         <div class="menu-link {% if main_path == 'authapp:login' %}active{% endif %}"><a
                 href="{% url 'authapp:login' %}">Войти</a></div>

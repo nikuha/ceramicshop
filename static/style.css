@@ -364,6 +364,11 @@ input, select, textarea {
     margin: 5px 0;
 }
 
+.error404 {
+    margin: 50px 0;
+    text-align: center;
+}
+
 @media (max-width: 600px) {
     .form-container {
         margin-top: 20px;

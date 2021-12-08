@@ -47,7 +47,6 @@ class ShopUserEditForm(UserChangeForm):
                 field.widget.attrs['class'] = field_name
                 field.help_text = ''
 
-
     def clean_age(self):
         data = self.cleaned_data['age']
         if data < 18:

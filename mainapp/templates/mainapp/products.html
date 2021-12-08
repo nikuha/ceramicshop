@@ -9,7 +9,7 @@
     <div class="products-container">
         {% for product in products %}
             <div class="item-container pointer" style="background-image: url('{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/default.png' %}{% endif %}')"
-                 onclick="document.location='{{ product.url }}'">
+                 onclick="document.location='{%  url 'basketapp:add' product.pk %}'">
                 <div class="title">
                     {{ product.name }}
                 </div>
