@@ -272,7 +272,7 @@ input, select, textarea {
 
 .basket-container {
     margin: 50px auto;
-    width: 800px;
+    width: 850px;
     max-width: 100%;
 }
 .basket-container .item-container {
@@ -313,7 +313,26 @@ input, select, textarea {
 
 .basket-container .quantity-container{
     margin: 0 10px;
-    width: 50px;
+    width: 90px;
+    display: flex;
+    align-items: center;
+}
+.basket-container .quantity-container > div{
+    width: 30px;
+    text-align: center;
+}
+.basket-container .quantity-container .quantity{
+    font-weight: bold;
+}
+
+.basket-container .quantity-container .plus button, .basket-container .quantity-container .minus button{
+    border: 1px solid #95a574;
+    background-color: #95a574;
+    width: 25px;
+    height: 25px;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
 }
 .basket-container .product-cost {
     margin: 0 10px;
