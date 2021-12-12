@@ -4,21 +4,11 @@ import django.forms as forms
 from authapp.models import ShopUser
 
 
-class ShopUserLoginForm(AuthenticationForm):
+class AdminShopUserCreateForm(UserCreationForm):
     class Meta:
         model = ShopUser
-        fields = ('username', 'password')
-
-    def __init__(self, *args, **kwargs):
-        super(ShopUserLoginForm, self).__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = field_name
-
-
-class ShopUserRegisterForm(UserCreationForm):
-    class Meta:
-        model = ShopUser
-        fields = ('username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'age', 'avatar')
+        fields = (
+            'is_superuser', 'username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,10 +23,10 @@ class ShopUserRegisterForm(UserCreationForm):
         return data
 
 
-class ShopUserEditForm(UserChangeForm):
+class AdminShopUserUpdateForm(UserChangeForm):
     class Meta:
         model = ShopUser
-        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'age', 'avatar')
+        fields = ('is_superuser', 'username', 'password', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

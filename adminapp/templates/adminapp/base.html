@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title|title }}</title>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.ico' %}" id="faviconImg">
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <link rel="stylesheet" href="{% static 'admin.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
+</head>
+<body>
+<div class="wrapper-container column">
+    <div class="top-container">
+        <div class="inner-container">
+            <div class="logo-container row">
+                <div><a href="{% url 'mainapp:index' %}"><img src="{% static 'img/logo.png' %}" alt=""></a></div>
+                <div class="title center">Керамическая посуда<br> ручной работы</div>
+            </div>
+            <div class="links row flex-wrap">
+                <div class="menu-link"><a href="{% url 'mainapp:index' %}">На главную</a></div>
+                <div class="menu-link">|</div>
+                <div class="menu-link active">
+                    {% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username }}{% endif %}
+                </div>
+                <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="middle-container {{ content_class }}">
+        {% include 'adminapp/includes/inc__menu.html' %}
+        <div class="inner-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    <div class="footer-container">
+        <div class="inner-container center">
+            Сочи, Красная Поляна @ Керамика Сочи {% now 'Y' %}
+        </div>
+    </div>
+</div>
+{% block js %}
+{% endblock %}
+</body>
+</html>

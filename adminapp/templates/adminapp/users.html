@@ -1,0 +1,38 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    <div class="objects-container">
+        <div class="create-container">
+            <div class="a-button green"><a href="{% url 'adminapp:user_create' %}">Добавить нового пользователя</a>
+            </div>
+        </div>
+        {% for item in object_list %}
+            <div class="item-container {% if not item.is_active %}not_active{% endif %}">
+                <div class="image-container" style="background-image: url('{{ item.image_or_default }}')"></div>
+                <div class="description-container column-middle">
+                    <div class="title">{{ item.username }}</div>
+                    <div class="description">
+                        {% if item.first_name or item.last_name %}
+                            {{ item.first_name }} {{ item.last_name }},
+                        {% endif %}
+                        возраст: {% if item.age %}{{ item.age }}{% else %}не указан{% endif %}
+                    </div>
+                </div>
+                {% if item.is_active %}
+                    <div class="update-container column-middle">
+                        <div class="a-button green"><a href="{% url 'adminapp:user_update' item.pk %}">Редактировать</a>
+                        </div>
+                    </div>
+                    <div class="delete-container column-middle">
+                        <div class="a-button red"><a href="{% url 'adminapp:user_delete' item.pk %}">Удалить</a></div>
+                    </div>
+                {% else %}
+                    <div class="update-container column-middle">
+                        <div class="a-button green"><a href="{% url 'adminapp:user_restore' item.pk %}">Восстановить</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

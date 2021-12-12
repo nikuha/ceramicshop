@@ -1,0 +1,74 @@
+
+.objects-container {
+    margin: 50px auto;
+    width: 750px;
+    max-width: 100%;
+}
+
+.objects-container .item-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 0;
+}
+
+.objects-container .image-container {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.objects-container .description-container {
+    margin: 0 20px;
+    width: 250px;
+    max-width: 100%;
+}
+
+.objects-container .description-container .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #826756;
+}
+
+.objects-container .description-container .description {
+    margin: 20px 0;
+}
+
+.objects-container .delete-container, .objects-container .update-container {
+    padding: 0 5px;
+}
+
+.objects-container .item-container.not_active {
+    opacity: .7;
+}
+
+.create-container {
+    margin-bottom: 10px;
+}
+
+.a-button a {
+    display: block;
+    width: fit-content;
+}
+
+.a-button a, button.standard {
+    padding: 7px 10px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+}
+
+.objects-container .delete-container .a-button a, .objects-container .update-container .a-button a {
+    margin: 0 auto;
+}
+
+.a-button.red a, button.standard.red {
+    background-color: #ef9090;
+}
+
+.a-button.green a, button.standard.green {
+    background-color: #95a574;
+}

@@ -15,6 +15,15 @@ input:focus, select:focus, textarea:focus, button:focus {
     outline: none;
 }
 
+button {
+    border: none;
+    cursor: pointer;
+}
+
+a {
+    color: #687251;
+}
+
 html {
     overflow-y: scroll;
 }
@@ -141,6 +150,19 @@ input, select, textarea {
     .products-menu .item {
         margin: 10px;
     }
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+.margin-lr {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.right {
+    text-align: right;
 }
 
 .products-container, .contacts-container {
@@ -275,6 +297,7 @@ input, select, textarea {
     width: 850px;
     max-width: 100%;
 }
+
 .basket-container .item-container {
     display: flex;
     flex-wrap: wrap;
@@ -289,43 +312,46 @@ input, select, textarea {
     background-position: center;
     border-radius: 10px;
 }
-.basket-container .description-container{
+
+.basket-container .description-container {
     margin: 0 20px;
     width: 350px;
     max-width: 100%;
 }
 
-.basket-container .description-container .title{
+.basket-container .description-container .title {
     font-size: 18px;
     font-weight: bold;
     color: #826756;
 }
 
-.basket-container .description-container .description{
+.basket-container .description-container .description {
     margin: 20px 0;
 }
 
-.column-middle{
+.column-middle {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.basket-container .quantity-container{
+.basket-container .quantity-container {
     margin: 0 10px;
     width: 90px;
     display: flex;
     align-items: center;
 }
-.basket-container .quantity-container > div{
+
+.basket-container .quantity-container > div {
     width: 30px;
     text-align: center;
 }
-.basket-container .quantity-container .quantity{
+
+.basket-container .quantity-container .quantity {
     font-weight: bold;
 }
 
-.basket-container .quantity-container .plus button, .basket-container .quantity-container .minus button{
+.basket-container .quantity-container .plus button, .basket-container .quantity-container .minus button {
     border: 1px solid #95a574;
     background-color: #95a574;
     width: 25px;
@@ -334,6 +360,7 @@ input, select, textarea {
     color: white;
     cursor: pointer;
 }
+
 .basket-container .product-cost {
     margin: 0 10px;
     width: 100px;
@@ -350,7 +377,8 @@ input, select, textarea {
     text-decoration: none;
     border-radius: 5px;
 }
-.basket-summary{
+
+.basket-summary {
     margin: 10px 0;
 }
 
@@ -427,6 +455,10 @@ input, select, textarea {
 
 .space-between {
     justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
 }
 
 .center {
