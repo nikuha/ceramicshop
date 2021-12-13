@@ -2,6 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, User
 import django.forms as forms
 
 from authapp.models import ShopUser
+from mainapp.models import Contact, ProductCategory
 
 
 class AdminShopUserCreateForm(UserCreationForm):
@@ -42,3 +43,28 @@ class AdminShopUserUpdateForm(UserChangeForm):
         if data < 18:
             raise forms.ValidationError("У нас сторого 18+!")
         return data
+
+
+class AdminContactCreateForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ('city', 'phone', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = field_name
+            field.help_text = ''
+
+
+class AdminProductCategoryCreateForm(forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ('name', 'description')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = field_name
+            field.help_text = ''
+

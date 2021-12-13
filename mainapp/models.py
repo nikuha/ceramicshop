@@ -6,6 +6,7 @@ from django.templatetags.static import static
 class ProductCategory(models.Model):
     name = models.CharField(verbose_name='имя категории', max_length=64)
     description = models.TextField(verbose_name='описание категории', blank=True)
+    is_active = models.BooleanField(verbose_name='активная', default=1)
 
     def __str__(self):
         return self.name
@@ -22,6 +23,7 @@ class Product(models.Model):
     price = models.DecimalField(verbose_name='цена продукта', max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveSmallIntegerField(verbose_name='количество', default=1)
     image = models.ImageField(upload_to='products_images', blank=True)
+    is_active = models.BooleanField(verbose_name='активная', default=1)
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'
@@ -42,7 +44,8 @@ class Product(models.Model):
 class Contact(models.Model):
     city = models.CharField(verbose_name='город', max_length=64)
     phone = models.CharField(verbose_name='телефон', max_length=20)
-    email = models.CharField(verbose_name='email', max_length=64)
+    email = models.EmailField(verbose_name='email', max_length=254)
+    is_active = models.BooleanField(verbose_name='активный', default=1)
 
     def __str__(self):
         return self.city

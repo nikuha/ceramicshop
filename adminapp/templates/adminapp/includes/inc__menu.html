@@ -5,7 +5,7 @@
         </div>
 
         <div class="item {% if request.resolver_match.url_name == 'products' %}active{% endif %}"
-             onclick="document.location='{% url 'adminapp:products' %}'">Продукты
+             onclick="document.location='{#% url 'adminapp:products' %#}'">Продукты
         </div>
 
         <div class="item {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"

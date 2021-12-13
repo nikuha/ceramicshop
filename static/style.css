@@ -520,6 +520,16 @@ input, select, textarea {
     border: 1px solid #95a574;
 }
 
+.base-form p textarea {
+    width: 50%;
+    height: 80px;
+    padding: 0 5px;
+}
+
+.base-form p a {
+    padding-left: 50%;
+}
+
 .base-form a {
     color: #554439;
 }
