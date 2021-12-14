@@ -5,6 +5,11 @@ app_name = 'adminapp'
 
 urlpatterns = [
     path('', adminapp.index, name='index'),
+
+    path('products/create/<int:pk>/', adminapp.product_create, name='product_create'),
+    path('products/update/<int:pk>/', adminapp.product_update, name='product_update'),
+    path('products/toggle_active/<int:pk>/', adminapp.product_toggle_active, name='product_toggle_active'),
+    path('products/<int:pk>/', adminapp.products, name='category_products'),
     path('products/', adminapp.products, name='products'),
 
     path('categories/create/', adminapp.category_create, name='category_create'),

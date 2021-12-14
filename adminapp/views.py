@@ -4,9 +4,10 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from adminapp.forms import AdminShopUserCreateForm, AdminShopUserUpdateForm
-from adminapp.forms import AdminContactCreateForm, AdminProductCategoryCreateForm
+from adminapp.forms import AdminContactCreateForm
+from adminapp.forms import AdminProductCreateForm, AdminProductCategoryCreateForm
 from authapp.models import ShopUser
-from mainapp.models import Contact, ProductCategory
+from mainapp.models import Contact, ProductCategory, Product
 
 
 @user_passes_test(lambda x: x.is_superuser)
@@ -17,8 +18,70 @@ def index(request):
     return render(request, 'adminapp/index.html', context)
 
 
-def products(request):
-    pass
+def products(request, pk=None):
+    if pk:
+        category = get_object_or_404(ProductCategory, pk=pk)
+    else:
+        category = ProductCategory.objects.filter(is_active=1).first()
+
+    categories = ProductCategory.objects.order_by('-is_active', 'pk').all()
+
+    object_list = category.product_set.order_by('-is_active', 'pk')
+    context = {
+        'page_title': f'Админка / Продукты категории {category.name}',
+        'object_list': object_list,
+        'category': category,
+        'categories': categories
+    }
+    return render(request, 'adminapp/products.html', context)
+
+
+@user_passes_test(lambda x: x.is_superuser)
+def product_create(request, pk):
+    if request.method == 'POST':
+        product_form = AdminProductCreateForm(request.POST, request.FILES)
+        if product_form.is_valid():
+            product_form.save()
+            return HttpResponseRedirect(reverse('adminapp:category_products', args=[pk]))
+    else:
+        category = ProductCategory.objects.filter(pk=pk).first()
+        product_form = AdminProductCreateForm(initial={'category': category})
+
+    context = {
+        'page_title': 'Админка / Добавление продукта',
+        'update_form': product_form,
+        'category_pk': pk
+    }
+    return render(request, 'adminapp/product_update.html', context)
+
+
+@user_passes_test(lambda x: x.is_superuser)
+def product_update(request, pk):
+    edit_product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        edit_form = AdminProductCreateForm(request.POST, request.FILES, instance=edit_product)
+        if edit_form.is_valid():
+            edit_form.save()
+            return HttpResponseRedirect(reverse('adminapp:product_update', args=[edit_product.pk]))
+    else:
+        edit_form = AdminProductCreateForm(instance=edit_product)
+
+    context = {
+        'page_title': 'Админка / Редактирование продукта',
+        'update_form': edit_form,
+        'category_pk': edit_product.category_id
+    }
+    return render(request, 'adminapp/product_update.html', context)
+
+
+@user_passes_test(lambda x: x.is_superuser)
+def product_toggle_active(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        product.is_active = not product.is_active
+        product.save()
+    return HttpResponseRedirect(reverse('adminapp:category_products', args=[product.category_id]))
 
 
 @user_passes_test(lambda x: x.is_superuser)
