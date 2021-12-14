@@ -21,6 +21,7 @@ def products(request):
     pass
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def categories(request):
     object_list = ProductCategory.objects.all().order_by('-is_active', 'pk')
     context = {
@@ -30,6 +31,7 @@ def categories(request):
     return render(request, 'adminapp/categories.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def category_create(request):
     if request.method == 'POST':
         category_form = AdminProductCategoryCreateForm(request.POST, request.FILES)
@@ -46,6 +48,7 @@ def category_create(request):
     return render(request, 'adminapp/category_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def category_update(request, pk):
     edit_category = get_object_or_404(ProductCategory, pk=pk)
     if request.method == 'POST':
@@ -63,6 +66,7 @@ def category_update(request, pk):
     return render(request, 'adminapp/category_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def category_delete(request, pk):
     category = get_object_or_404(ProductCategory, pk=pk)
 
@@ -79,6 +83,7 @@ def category_delete(request, pk):
     return render(request, 'adminapp/category_delete.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def category_restore(request, pk):
     category = get_object_or_404(ProductCategory, pk=pk)
 
@@ -87,6 +92,7 @@ def category_restore(request, pk):
     return HttpResponseRedirect(reverse('adminapp:categories'))
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def contacts(request):
     object_list = Contact.objects.all().order_by('-is_active', 'pk')
     context = {
@@ -96,6 +102,7 @@ def contacts(request):
     return render(request, 'adminapp/contacts.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def contact_create(request):
     if request.method == 'POST':
         contact_form = AdminContactCreateForm(request.POST, request.FILES)
@@ -112,6 +119,7 @@ def contact_create(request):
     return render(request, 'adminapp/contact_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def contact_update(request, pk):
     edit_contact = get_object_or_404(Contact, pk=pk)
     if request.method == 'POST':
@@ -129,6 +137,7 @@ def contact_update(request, pk):
     return render(request, 'adminapp/contact_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def contact_delete(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
 
@@ -145,6 +154,7 @@ def contact_delete(request, pk):
     return render(request, 'adminapp/contact_delete.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def contact_restore(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
 
@@ -153,6 +163,7 @@ def contact_restore(request, pk):
     return HttpResponseRedirect(reverse('adminapp:contacts'))
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def users(request):
     users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
     context = {
@@ -162,6 +173,7 @@ def users(request):
     return render(request, 'adminapp/users.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def user_create(request):
     if request.method == 'POST':
         user_form = AdminShopUserCreateForm(request.POST, request.FILES)
@@ -178,6 +190,7 @@ def user_create(request):
     return render(request, 'adminapp/user_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def user_update(request, pk):
     edit_user = get_object_or_404(ShopUser, pk=pk)
     if request.method == 'POST':
@@ -195,6 +208,7 @@ def user_update(request, pk):
     return render(request, 'adminapp/user_update.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def user_delete(request, pk):
     user = get_object_or_404(ShopUser, pk=pk)
 
@@ -211,6 +225,7 @@ def user_delete(request, pk):
     return render(request, 'adminapp/user_delete.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def user_restore(request, pk):
     user = get_object_or_404(ShopUser, pk=pk)
 
