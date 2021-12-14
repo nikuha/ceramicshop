@@ -138,7 +138,7 @@ input, select, textarea {
     transition: .3s;
 }
 
-.item.active, .item:hover {
+.products-menu .item.active, .products-menu .item.active .item:hover {
     color: #e8d5c6;
 }
 
@@ -559,18 +559,6 @@ input, select, textarea {
     color: #ef9090;
 }
 
-.helptext {
-    color: #929191;
-    font-size: small;
-    display: block;
-    margin: 5px 0;
-}
-
-.error404 {
-    margin: 50px 0;
-    text-align: center;
-}
-
 @media (max-width: 600px) {
     .form-container {
         margin-top: 20px;
@@ -586,4 +574,51 @@ input, select, textarea {
         text-align: center;
 
     }
+}
+
+.helptext {
+    color: #929191;
+    font-size: small;
+    display: block;
+    margin: 5px 0;
+}
+
+.error404 {
+    margin: 50px 0;
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    width: fit-content;
+    margin: 15px auto;
+}
+
+.pagination .item {
+    margin: 0 3px;
+    text-align: center;
+    width: 26px;
+    height: 26px;
+}
+
+.pagination .item a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 3px 7px;
+}
+
+.pagination .item:hover:not(.not_active), .pagination .item.active {
+    background-color: #95a574;
+    color: white;
+}
+
+.pagination .item:hover a, .pagination .item.active a {
+    color: white;
+}
+
+.pagination .item.not_active {
+    opacity: .4;
+    padding: 3px 7px;
 }

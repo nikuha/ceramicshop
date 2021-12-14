@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -10,6 +11,18 @@ from authapp.models import ShopUser
 from mainapp.models import Contact, ProductCategory, Product
 
 
+def pagination(request, objects):
+    paginator = Paginator(objects, 4)
+    page = request.GET['page'] if 'page' in request.GET else 1
+    try:
+        objects_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        objects_paginator = paginator.page(1)
+    except EmptyPage:
+        objects_paginator = paginator.page(paginator.num_pages)
+    return objects_paginator
+
+
 @user_passes_test(lambda x: x.is_superuser)
 def index(request):
     context = {
@@ -18,18 +31,20 @@ def index(request):
     return render(request, 'adminapp/index.html', context)
 
 
+@user_passes_test(lambda x: x.is_superuser)
 def products(request, pk=None):
     if pk:
         category = get_object_or_404(ProductCategory, pk=pk)
     else:
-        category = ProductCategory.objects.filter(is_active=1).first()
+        category = ProductCategory.objects.filter(is_active=True).first()
 
     categories = ProductCategory.objects.order_by('-is_active', 'pk').all()
 
     object_list = category.product_set.order_by('-is_active', 'pk')
+
     context = {
         'page_title': f'Админка / Продукты категории {category.name}',
-        'object_list': object_list,
+        'object_list': pagination(request, object_list),
         'category': category,
         'categories': categories
     }
@@ -199,7 +214,7 @@ def users(request):
     users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
     context = {
         'page_title': 'Админка / Пользователи',
-        'object_list': users_list
+        'object_list': pagination(request, users_list)
     }
     return render(request, 'adminapp/users.html', context)
 

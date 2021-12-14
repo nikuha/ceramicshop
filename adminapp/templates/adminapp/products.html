@@ -36,5 +36,6 @@
                 </div>
             </div>
         {% endfor %}
+        {% include 'adminapp/includes/inc__pagination.html' with objects=object_list %}
     </div>
 {% endblock %}
