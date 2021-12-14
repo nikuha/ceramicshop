@@ -67,28 +67,12 @@ def category_update(request, pk):
 
 
 @user_passes_test(lambda x: x.is_superuser)
-def category_delete(request, pk):
+def category_toggle_active(request, pk):
     category = get_object_or_404(ProductCategory, pk=pk)
 
     if request.method == 'POST':
-        # category.delete()
-        category.is_active = False
+        category.is_active = not category.is_active
         category.save()
-        return HttpResponseRedirect(reverse('adminapp:categories'))
-
-    context = {
-        'page_title': 'Админка / Удаление категории продуктов',
-        'category_to_delete': category
-    }
-    return render(request, 'adminapp/category_delete.html', context)
-
-
-@user_passes_test(lambda x: x.is_superuser)
-def category_restore(request, pk):
-    category = get_object_or_404(ProductCategory, pk=pk)
-
-    category.is_active = True
-    category.save()
     return HttpResponseRedirect(reverse('adminapp:categories'))
 
 
@@ -138,28 +122,12 @@ def contact_update(request, pk):
 
 
 @user_passes_test(lambda x: x.is_superuser)
-def contact_delete(request, pk):
+def contact_toggle_active(request, pk):
     contact = get_object_or_404(Contact, pk=pk)
 
     if request.method == 'POST':
-        # contact.delete()
-        contact.is_active = False
+        contact.is_active = not contact.is_active
         contact.save()
-        return HttpResponseRedirect(reverse('adminapp:contacts'))
-
-    context = {
-        'page_title': 'Админка / Удаление контакта',
-        'contact_to_delete': contact
-    }
-    return render(request, 'adminapp/contact_delete.html', context)
-
-
-@user_passes_test(lambda x: x.is_superuser)
-def contact_restore(request, pk):
-    contact = get_object_or_404(Contact, pk=pk)
-
-    contact.is_active = True
-    contact.save()
     return HttpResponseRedirect(reverse('adminapp:contacts'))
 
 
@@ -209,26 +177,10 @@ def user_update(request, pk):
 
 
 @user_passes_test(lambda x: x.is_superuser)
-def user_delete(request, pk):
+def user_toggle_active(request, pk):
     user = get_object_or_404(ShopUser, pk=pk)
 
     if request.method == 'POST':
-        # user.delete()
-        user.is_active = False
+        user.is_active = not user.is_active
         user.save()
-        return HttpResponseRedirect(reverse('adminapp:users'))
-
-    context = {
-        'page_title': 'Админка / Удаление пользователя',
-        'user_to_delete': user
-    }
-    return render(request, 'adminapp/user_delete.html', context)
-
-
-@user_passes_test(lambda x: x.is_superuser)
-def user_restore(request, pk):
-    user = get_object_or_404(ShopUser, pk=pk)
-
-    user.is_active = True
-    user.save()
     return HttpResponseRedirect(reverse('adminapp:users'))

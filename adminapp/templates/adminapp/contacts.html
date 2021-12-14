@@ -20,15 +20,14 @@
                         <div class="a-button green"><a href="{% url 'adminapp:contact_update' item.pk %}">Редактировать</a>
                         </div>
                     </div>
-                    <div class="delete-container column-middle">
-                        <div class="a-button red"><a href="{% url 'adminapp:contact_delete' item.pk %}">Удалить</a></div>
-                    </div>
-                {% else %}
-                    <div class="update-container column-middle">
-                        <div class="a-button green"><a href="{% url 'adminapp:contact_restore' item.pk %}">Восстановить</a>
-                        </div>
-                    </div>
                 {% endif %}
+                <div class="{% if item.is_active %}delete-container{% else %}update-container{% endif %} column-middle">
+                    <form action="{% url 'adminapp:contact_toggle_active' item.pk %}" method="post">
+                        {% csrf_token %}
+                        <button class="standard {% if item.is_active %}red{% else %}green{% endif %}" type="submit">
+                            {% if item.is_active %}Удалить{% else %}Восстановить{% endif %}</button>
+                    </form>
+                </div>
             </div>
         {% endfor %}
     </div>
