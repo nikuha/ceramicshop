@@ -25,7 +25,7 @@ function initBasketQuantity() {
 
                     success: function (data) {
                         quantity_div.html(new_quantity);
-                        $('#product_cost'+pk).html(data.product_cost+'&nbsp;руб');
+                        $('#product_cost'+pk).html(data.product_cost);
                         $('#basket_total_quantity').html(data.total_quantity);
                         $('#basket_total_cost').html(data.total_cost);
                         $('#top_total_quantity').html(data.total_quantity);

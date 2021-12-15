@@ -1,3 +1,5 @@
+{% load my_tags %}
+
 <div class="links row flex-wrap">
     <div class="menu-link {% if main_path == 'mainapp:index' %}active{% endif %}"><a href="{% url 'mainapp:index' %}">Главная</a>
     </div>
@@ -24,7 +26,7 @@
             <div class="menu-link">
                 <a href="{% url 'basketapp:view' %}" class="basket">
                     <span id="top_total_quantity">{{ basket.0.total_quantity }}</span> шт.
-                    <span id="top_total_cost">{{ basket.0.total_cost|floatformat:0 }}</span> руб
+                    <span id="top_total_cost">{{ basket.0.total_cost|with_currency }}</span>
                 </a>
             </div>
         {% endif %}

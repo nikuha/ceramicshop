@@ -1,5 +1,6 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
+{% load my_tags %}
 
 {% block products_menu %}
     {% include 'mainapp/includes/inc__categories_menu.html' %}
@@ -15,7 +16,7 @@
                 <div class="hot">Горячее предложение</div>
                 {% if hot_product.description %}
                     <div>{{ hot_product.description }}</div>{% endif %}
-                <div class="price">{{ hot_product.price|floatformat:0 }} руб.</div>
+                <div class="price">{{ hot_product.price|with_currency }}</div>
                 <div class="button"><a href="{{ hot_product.add_to_basket_url }}">Заказать</a></div>
             </div>
         </div>
