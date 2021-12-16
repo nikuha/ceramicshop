@@ -17,13 +17,13 @@ urlpatterns = [
     path('categories/', adminapp.ProductCategoryListView.as_view(), name='categories'),
     path('categories/toggle_active/<int:pk>/', adminapp.category_toggle_active, name='category_toggle_active'),
 
-    path('contacts/create/', adminapp.contact_create, name='contact_create'),
-    path('contacts/update/<int:pk>/', adminapp.contact_update, name='contact_update'),
+    path('contacts/create/', adminapp.ContactCreateView.as_view(), name='contact_create'),
+    path('contacts/update/<int:pk>/', adminapp.ContactUpdateView.as_view(), name='contact_update'),
+    path('contacts/', adminapp.ContactListView.as_view(), name='contacts'),
     path('contacts/toggle_active/<int:pk>/', adminapp.contact_toggle_active, name='contact_toggle_active'),
-    path('contacts/', adminapp.contacts, name='contacts'),
 
-    path('users/create/', adminapp.user_create, name='user_create'),
-    path('users/update/<int:pk>/', adminapp.user_update, name='user_update'),
+    path('users/create/', adminapp.ShopUserCreateView.as_view(), name='user_create'),
+    path('users/update/<int:pk>/', adminapp.ShopUserUpdateView.as_view(), name='user_update'),
+    path('users/', adminapp.ShopUserListView.as_view(), name='users'),
     path('users/toggle_active/<int:pk>/', adminapp.user_toggle_active, name='user_toggle_active'),
-    path('users/', adminapp.users, name='users'),
 ]

@@ -136,10 +136,10 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     model = ProductCategory
     template_name = 'adminapp/category_update.html'
     page_title = 'Админка / Редактирование категории продуктов'
+    success_url = reverse_lazy('adminapp:categories')
     form_class = AdminProductCategoryCreateForm
-
-    def get_success_url(self):
-        return reverse('adminapp:category_update', kwargs={'pk': self.object.pk})
+    # def get_success_url(self):
+    #     return reverse('adminapp:category_update', kwargs={'pk': self.object.pk})
 
 
 @user_passes_test(lambda x: x.is_superuser)
@@ -152,49 +152,27 @@ def category_toggle_active(request, pk):
     return HttpResponseRedirect(reverse('adminapp:categories'))
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def contacts(request):
-    object_list = Contact.objects.all().order_by('-is_active', 'pk')
-    context = {
-        'page_title': 'Админка / Контакты',
-        'object_list': object_list
-    }
-    return render(request, 'adminapp/contacts.html', context)
+class ContactListView(SuperUserOnlyMixin, PageContextMixin, ListView):
+    model = Contact
+    template_name = 'adminapp/contacts.html'
+    page_title = 'Админка / Контакты'
+    ordering = ['-is_active', 'pk']
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def contact_create(request):
-    if request.method == 'POST':
-        contact_form = AdminContactCreateForm(request.POST, request.FILES)
-        if contact_form.is_valid():
-            contact_form.save()
-            return HttpResponseRedirect(reverse('adminapp:contacts'))
-    else:
-        contact_form = AdminContactCreateForm()
-
-    context = {
-        'page_title': 'Админка / Добавление контакта',
-        'update_form': contact_form
-    }
-    return render(request, 'adminapp/contact_update.html', context)
+class ContactCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
+    model = Contact
+    template_name = 'adminapp/contact_update.html'
+    page_title = 'Админка / Добавление контакта'
+    success_url = reverse_lazy('adminapp:contacts')
+    form_class = AdminContactCreateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def contact_update(request, pk):
-    edit_contact = get_object_or_404(Contact, pk=pk)
-    if request.method == 'POST':
-        edit_form = AdminContactCreateForm(request.POST, request.FILES, instance=edit_contact)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('adminapp:contact_update', args=[edit_contact.pk]))
-    else:
-        edit_form = AdminContactCreateForm(instance=edit_contact)
-
-    context = {
-        'page_title': 'Админка / Редактирование контакта',
-        'update_form': edit_form
-    }
-    return render(request, 'adminapp/contact_update.html', context)
+class ContactUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
+    model = Contact
+    template_name = 'adminapp/contact_update.html'
+    page_title = 'Админка / Редактирование контакта'
+    success_url = reverse_lazy('adminapp:contacts')
+    form_class = AdminContactCreateForm
 
 
 @user_passes_test(lambda x: x.is_superuser)
@@ -207,49 +185,28 @@ def contact_toggle_active(request, pk):
     return HttpResponseRedirect(reverse('adminapp:contacts'))
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def users(request):
-    users_list = ShopUser.objects.all().order_by('-is_active', '-is_superuser', '-is_staff', 'username')
-    context = {
-        'page_title': 'Админка / Пользователи',
-        'object_list': pagination(request, users_list)
-    }
-    return render(request, 'adminapp/users.html', context)
+class ShopUserListView(SuperUserOnlyMixin, PageContextMixin, ListView):
+    model = ShopUser
+    template_name = 'adminapp/users.html'
+    page_title = 'Админка / Пользователи'
+    ordering = ['-is_active', 'pk']
+    paginate_by = 5
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def user_create(request):
-    if request.method == 'POST':
-        user_form = AdminShopUserCreateForm(request.POST, request.FILES)
-        if user_form.is_valid():
-            user_form.save()
-            return HttpResponseRedirect(reverse('adminapp:users'))
-    else:
-        user_form = AdminShopUserCreateForm()
-
-    context = {
-        'page_title': 'Админка / Добавление пользователя',
-        'update_form': user_form
-    }
-    return render(request, 'adminapp/user_update.html', context)
+class ShopUserCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
+    model = ShopUser
+    template_name = 'adminapp/user_update.html'
+    page_title = 'Админка / Добавление пользователя'
+    success_url = reverse_lazy('adminapp:users')
+    form_class = AdminShopUserCreateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def user_update(request, pk):
-    edit_user = get_object_or_404(ShopUser, pk=pk)
-    if request.method == 'POST':
-        edit_form = AdminShopUserUpdateForm(request.POST, request.FILES, instance=edit_user)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('adminapp:user_update', args=[edit_user.pk]))
-    else:
-        edit_form = AdminShopUserUpdateForm(instance=edit_user)
-
-    context = {
-        'page_title': 'Админка / Редактирование пользователя',
-        'update_form': edit_form
-    }
-    return render(request, 'adminapp/user_update.html', context)
+class ShopUserUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
+    model = ShopUser
+    template_name = 'adminapp/user_update.html'
+    page_title = 'Админка / Редактирование пользователя'
+    success_url = reverse_lazy('adminapp:users')
+    form_class = AdminShopUserUpdateForm
 
 
 @user_passes_test(lambda x: x.is_superuser)
