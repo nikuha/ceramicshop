@@ -2,13 +2,31 @@ from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 
 from adminapp.forms import AdminShopUserCreateForm, AdminShopUserUpdateForm
 from adminapp.forms import AdminContactCreateForm
 from adminapp.forms import AdminProductCreateForm, AdminProductCategoryCreateForm
 from authapp.models import ShopUser
 from mainapp.models import Contact, ProductCategory, Product
+
+
+class SuperUserOnlyMixin:
+    @method_decorator(user_passes_test(lambda x: x.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+class PageContextMixin:
+    page_title = ''
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.page_title
+        return context
 
 
 def pagination(request, objects):
@@ -99,49 +117,29 @@ def product_toggle_active(request, pk):
     return HttpResponseRedirect(reverse('adminapp:category_products', args=[product.category_id]))
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def categories(request):
-    object_list = ProductCategory.objects.all().order_by('-is_active', 'pk')
-    context = {
-        'page_title': 'Админка / Категории продуктов',
-        'object_list': object_list
-    }
-    return render(request, 'adminapp/categories.html', context)
+class ProductCategoryListView(SuperUserOnlyMixin, PageContextMixin, ListView):
+    model = ProductCategory
+    template_name = 'adminapp/categories.html'
+    page_title = 'Админка / Категории продуктов'
+    ordering = ['-is_active', 'pk']
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def category_create(request):
-    if request.method == 'POST':
-        category_form = AdminProductCategoryCreateForm(request.POST, request.FILES)
-        if category_form.is_valid():
-            category_form.save()
-            return HttpResponseRedirect(reverse('adminapp:categories'))
-    else:
-        category_form = AdminProductCategoryCreateForm()
-
-    context = {
-        'page_title': 'Админка / Добавление категории продуктов',
-        'update_form': category_form
-    }
-    return render(request, 'adminapp/category_update.html', context)
+class ProductCategoryCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    page_title = 'Админка / Добавление категории продуктов'
+    success_url = reverse_lazy('adminapp:categories')
+    form_class = AdminProductCategoryCreateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def category_update(request, pk):
-    edit_category = get_object_or_404(ProductCategory, pk=pk)
-    if request.method == 'POST':
-        edit_form = AdminProductCategoryCreateForm(request.POST, request.FILES, instance=edit_category)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('adminapp:category_update', args=[edit_category.pk]))
-    else:
-        edit_form = AdminProductCategoryCreateForm(instance=edit_category)
+class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
+    model = ProductCategory
+    template_name = 'adminapp/category_update.html'
+    page_title = 'Админка / Редактирование категории продуктов'
+    form_class = AdminProductCategoryCreateForm
 
-    context = {
-        'page_title': 'Админка / Редактирование категории продуктов',
-        'update_form': edit_form
-    }
-    return render(request, 'adminapp/category_update.html', context)
+    def get_success_url(self):
+        return reverse('adminapp:category_update', kwargs={'pk': self.object.pk})
 
 
 @user_passes_test(lambda x: x.is_superuser)
