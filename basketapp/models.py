@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from authapp.models import ShopUser
 from ceramicshop import settings
@@ -24,3 +25,6 @@ class Basket(models.Model):
     def total_cost(self):
         return sum([x.product_cost for x in self.user.basket.all()])
 
+    @property
+    def remove_from_basket_url(self):
+        return reverse('basketapp:remove', kwargs={'pk': self.id})
