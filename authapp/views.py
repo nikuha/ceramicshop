@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from authapp.forms import ShopUserLoginForm, ShopRegisterForm, ShopUserEditForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
 
 
 def login(request):
@@ -43,12 +43,12 @@ def logout(request):
 
 def register(request):
     if request.method == 'POST':
-        register_form = ShopRegisterForm(request.POST, request.FILES)
+        register_form = ShopUserRegisterForm(request.POST, request.FILES)
         if register_form.is_valid():
             register_form.save()
             return HttpResponseRedirect(reverse('authapp:login'))
     else:
-        register_form = ShopRegisterForm()
+        register_form = ShopUserRegisterForm()
 
     content = {'page_title': 'Регистрация', 'register_form': register_form, 'main_path': main_path(request)}
     return render(request, 'authapp/register.html', content)

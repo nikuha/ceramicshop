@@ -13,14 +13,14 @@ def index(request):
 
 
 def products(request, pk=None):
-    categories = ProductCategory.objects.all()
+    categories = ProductCategory.objects.filter(is_active=1).order_by('pk')
     if pk:
         category = get_object_or_404(ProductCategory, id=pk)
-        products = category.product_set.all()
+        products = category.product_set.filter(is_active=1).order_by('pk')
         hot_product = None
     else:
-        hot_product = Product.objects.order_by('?').first()
-        products = Product.objects.filter(category=hot_product.category).exclude(pk=hot_product.pk).order_by('?').all()[:3]
+        hot_product = Product.objects.filter(is_active=1, category__is_active=1).order_by('?').first()
+        products = Product.objects.filter(category=hot_product.category, is_active=1).exclude(pk=hot_product.pk).order_by('?').all()[:3]
 
     context = {
         'page_title': 'посуда',
@@ -35,7 +35,7 @@ def products(request, pk=None):
 
 
 def product(request, pk=None):
-    categories = ProductCategory.objects.all()
+    categories = ProductCategory.objects.filter(is_active=1).order_by('pk')
     product = Product.objects.get(pk=pk)
 
     context = {
@@ -50,7 +50,7 @@ def product(request, pk=None):
 
 
 def contacts(request):
-    items = Contact.objects.all()
+    items = Contact.objects.filter(is_active=1).order_by('pk')
     context = {
         'page_title': 'контакты',
         'contacts': items,

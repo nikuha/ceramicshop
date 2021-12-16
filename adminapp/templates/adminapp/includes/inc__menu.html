@@ -1,0 +1,19 @@
+<div class="products-menu">
+    <div class="inner-container">
+        <div class="item {% if request.resolver_match.url_name == 'categories' %}active{% endif %}"
+             onclick="document.location='{% url 'adminapp:categories' %}'">Категории
+        </div>
+
+        <div class="item {% if request.resolver_match.url_name == 'products' %}active{% endif %}"
+             onclick="document.location='{#% url 'adminapp:products' %#}'">Продукты
+        </div>
+
+        <div class="item {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"
+             onclick="document.location='{% url 'adminapp:contacts' %}'">Контакты
+        </div>
+
+        <div class="item {% if request.resolver_match.url_name == 'users' %}active{% endif %}"
+             onclick="document.location='{% url 'adminapp:users' %}'">Пользователи
+        </div>
+    </div>
+</div>
