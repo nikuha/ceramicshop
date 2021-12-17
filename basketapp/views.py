@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
+from django.conf import settings
 
 from basketapp.models import Basket
-from mainapp.models import Product
 
 
 @login_required
@@ -53,9 +53,9 @@ def update_quantity(request, pk):
             basket_record.save()
         # result = render_to_string('basketapp/includes/inc_basket_list.html', content)
         return JsonResponse({
-            'product_cost': round(basket_record.product_cost),
-            'total_quantity': round(basket_record.total_quantity),
-            'total_cost': round(basket_record.total_cost)
+            'product_cost': str(round(basket_record.product_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
+            'total_quantity': basket_record.total_quantity,
+            'total_cost': str(round(basket_record.total_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL
         })
     else:
         return JsonResponse({'error': 'Что-то пошло не так'})

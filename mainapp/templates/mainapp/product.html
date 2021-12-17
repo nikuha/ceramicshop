@@ -1,5 +1,6 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
+{% load my_tags %}
 
 {% block products_menu %}
     {% include 'mainapp/includes/inc__categories_menu.html' %}
@@ -12,7 +13,7 @@
             <div class="description-container column-middle">
                 <div class="title">{{ product.name|title }}</div>
                 {% if product.description %}<div>{{ product.description }}</div>{% endif %}
-                <div class="price">{{ product.price|floatformat:0 }} руб.</div>
+                <div class="price">{{ product.price|with_currency }}</div>
                 <div class="button"><a href="{{ product.add_to_basket_url }}">Заказать</a></div>
             </div>
         </div>

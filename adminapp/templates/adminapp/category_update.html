@@ -6,7 +6,7 @@
         <form class="base-form margin-center" method="post"
               enctype="multipart/form-data">
             {% csrf_token %}
-            {{ update_form.as_p }}
+            {{ form.as_p }}
             <p>
                 <label></label>
                 <input class="submit" type="submit" value="Сохранить">
@@ -16,7 +16,7 @@
 
     <div class="margin-center margin-top center">
         <a href="{% url 'adminapp:categories' %}">
-            к списку контактов
+            к списку категорий
         </a>
     </div>
 

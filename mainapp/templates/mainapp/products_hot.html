@@ -1,0 +1,35 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block products_menu %}
+    {% include 'mainapp/includes/inc__categories_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    {% if hot_product %}
+        <div class="hot-product-container">
+            <div class="image-container" style="background-image: url('{{ hot_product.image_or_default }}')">
+            </div>
+            <div class="description-container column-middle">
+                <div class="title">{{ hot_product.name|title }}</div>
+                <div class="hot">Горячее предложение</div>
+                {% if hot_product.description %}
+                    <div>{{ hot_product.description }}</div>{% endif %}
+                <div class="price">{{ hot_product.price|with_currency }}</div>
+                <div class="button"><a href="{{ hot_product.add_to_basket_url }}">Заказать</a></div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="simple-title">Похожие продукты:</div>
+    <div class="products-container">
+        {% for product in products %}
+            <div class="item-container pointer" style="background-image: url('{{ product.image_or_default }}')"
+                 onclick="document.location='{{ product.url }}'">
+                <div class="title">
+                    {{ product.name }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

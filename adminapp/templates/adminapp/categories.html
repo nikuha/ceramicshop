@@ -14,9 +14,14 @@
                         {{ item.description }}
                     </div>
                 </div>
+                <div class="update-container column-middle">
+                    <div class="a-button green"><a href="{% url 'adminapp:category_products' item.pk %}">Продукты</a>
+                    </div>
+                </div>
                 {% if item.is_active %}
                     <div class="update-container column-middle">
-                        <div class="a-button green"><a href="{% url 'adminapp:category_update' item.pk %}">Редактировать</a>
+                        <div class="a-button green"><a
+                                href="{% url 'adminapp:category_update' item.pk %}">Редактировать</a>
                         </div>
                     </div>
                 {% endif %}

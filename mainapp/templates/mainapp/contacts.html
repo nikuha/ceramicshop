@@ -1,5 +1,6 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
+{% load my_tags %}
 
 {% block content %}
     <div class="contacts-container">
@@ -7,7 +8,7 @@
                 <div class="item-container">
                     <div class="city">{{ contact.city }}</div>
                     <div class="phone">{{ contact.phone }}</div>
-                    <div class="email"><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></div>
+                    <div class="email">{{ contact.email|email_link }}</div>
                 </div>
             {% endfor %}
     </div>
