@@ -6,11 +6,11 @@ app_name = 'adminapp'
 urlpatterns = [
     path('', adminapp.index, name='index'),
 
-    path('products/create/<int:pk>/', adminapp.product_create, name='product_create'),
-    path('products/update/<int:pk>/', adminapp.product_update, name='product_update'),
+    path('products/create/<int:pk>/', adminapp.ProductCreateView.as_view(), name='product_create'),
+    path('products/update/<int:pk>/', adminapp.ProductUpdateView.as_view(), name='product_update'),
+    path('products/<int:pk>/', adminapp.ProductListView.as_view(), name='category_products'),
+    path('products/', adminapp.ProductListView.as_view(), name='products'),
     path('products/toggle_active/<int:pk>/', adminapp.product_toggle_active, name='product_toggle_active'),
-    path('products/<int:pk>/', adminapp.products, name='category_products'),
-    path('products/', adminapp.products, name='products'),
 
     path('categories/create/', adminapp.ProductCategoryCreateView.as_view(), name='category_create'),
     path('categories/update/<int:pk>/', adminapp.ProductCategoryUpdateView.as_view(), name='category_update'),

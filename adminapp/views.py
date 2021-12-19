@@ -29,16 +29,17 @@ class PageContextMixin:
         return context
 
 
-def pagination(request, objects):
-    paginator = Paginator(objects, 4)
-    page = request.GET['page'] if 'page' in request.GET else 1
-    try:
-        objects_paginator = paginator.page(page)
-    except PageNotAnInteger:
-        objects_paginator = paginator.page(1)
-    except EmptyPage:
-        objects_paginator = paginator.page(paginator.num_pages)
-    return objects_paginator
+# для пагинации без CBV
+# def pagination(request, objects):
+#     paginator = Paginator(objects, 4)
+#     page = request.GET['page'] if 'page' in request.GET else 1
+#     try:
+#         objects_paginator = paginator.page(page)
+#     except PageNotAnInteger:
+#         objects_paginator = paginator.page(1)
+#     except EmptyPage:
+#         objects_paginator = paginator.page(paginator.num_pages)
+#     return objects_paginator
 
 
 @user_passes_test(lambda x: x.is_superuser)
@@ -49,62 +50,65 @@ def index(request):
     return render(request, 'adminapp/index.html', context)
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def products(request, pk=None):
-    if pk:
-        category = get_object_or_404(ProductCategory, pk=pk)
-    else:
-        category = ProductCategory.objects.filter(is_active=True).first()
+class ProductListView(SuperUserOnlyMixin, ListView):
+    model = Product
+    template_name = 'adminapp/products.html'
+    paginate_by = 5
 
-    categories = ProductCategory.objects.order_by('-is_active', 'pk').all()
+    def get_category(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            return get_object_or_404(ProductCategory, pk=pk)
+        else:
+            return ProductCategory.objects.filter(is_active=True).first()
 
-    object_list = category.product_set.order_by('-is_active', 'pk')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = ProductCategory.objects.order_by('-is_active', 'pk').all()
+        context['category'] = self.get_category()
+        context['page_title'] = 'Админка / Продукты категории ' + context['category'].name
+        return context
 
-    context = {
-        'page_title': f'Админка / Продукты категории {category.name}',
-        'object_list': pagination(request, object_list),
-        'category': category,
-        'categories': categories
-    }
-    return render(request, 'adminapp/products.html', context)
-
-
-@user_passes_test(lambda x: x.is_superuser)
-def product_create(request, pk):
-    if request.method == 'POST':
-        product_form = AdminProductCreateForm(request.POST, request.FILES)
-        if product_form.is_valid():
-            product_form.save()
-            return HttpResponseRedirect(reverse('adminapp:category_products', args=[pk]))
-    else:
-        category = ProductCategory.objects.filter(pk=pk).first()
-        product_form = AdminProductCreateForm(initial={'category': category})
-
-    context = {
-        'page_title': 'Админка / Добавление продукта',
-        'update_form': product_form,
-        'category_pk': pk
-    }
-    return render(request, 'adminapp/product_update.html', context)
+    def get_queryset(self, **kwargs):
+        category = self.get_category()
+        return category.product_set.order_by('-is_active', 'pk')
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def product_update(request, pk):
-    edit_product = get_object_or_404(Product, pk=pk)
-    if request.method == 'POST':
-        edit_form = AdminProductCreateForm(request.POST, request.FILES, instance=edit_product)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('adminapp:product_update', args=[edit_product.pk]))
-    else:
-        edit_form = AdminProductCreateForm(instance=edit_product)
+class ProductCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
+    model = Product
+    template_name = 'adminapp/product_update.html'
+    page_title = 'Админка / Добавление продукта'
+    form_class = AdminProductCreateForm
 
-    context = {
-        'page_title': 'Админка / Редактирование продукта',
-        'update_form': edit_form,
-        'category_pk': edit_product.category_id
-    }
-    return render(request, 'adminapp/product_update.html', context)
+    # инициируем сразу нужную категорию
+    def get_initial(self):
+        initial = super(ProductCreateView, self).get_initial()
+        initial['category'] = self.kwargs.get('pk')
+        return initial
+
+    # возвращаем в нужную категорию
+    def get_success_url(self):
+        return reverse('adminapp:category_products', kwargs={'pk': self.object.category.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_pk'] = self.kwargs.get('pk')
+        return context
+
+
+class ProductUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
+    model = Product
+    template_name = 'adminapp/product_update.html'
+    page_title = 'Админка / Редактирование продукта'
+    form_class = AdminProductCreateForm
+
+    def get_success_url(self):
+        return reverse('adminapp:category_products', kwargs={'pk': self.object.category.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_pk'] = self.object.category.pk
+        return context
 
 
 @user_passes_test(lambda x: x.is_superuser)
@@ -138,6 +142,7 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     page_title = 'Админка / Редактирование категории продуктов'
     success_url = reverse_lazy('adminapp:categories')
     form_class = AdminProductCategoryCreateForm
+    # для возвращения на страницу продукта
     # def get_success_url(self):
     #     return reverse('adminapp:category_update', kwargs={'pk': self.object.pk})
 
