@@ -16,7 +16,11 @@ class Command(BaseCommand):
 
         categories = []
         for category in ProductCategory.objects.all():
-            categories.append({'name': category.name, 'description': category.description})
+            categories.append({
+                'name': category.name,
+                'description': category.description,
+                'is_active': category.is_active
+            })
 
         load_to_json('categories', categories)
 
@@ -28,14 +32,20 @@ class Command(BaseCommand):
                 'description': product.description,
                 'price': float(product.price),
                 'quantity': product.quantity,
-                'image': str(product.image)
+                'image': str(product.image),
+                'is_active': product.is_active
             })
 
         load_to_json('products', products)
 
         contacts = []
         for contact in Contact.objects.all():
-            contacts.append({'city': contact.city, 'phone': contact.phone, 'email': contact.email})
+            contacts.append({
+                'city': contact.city,
+                'phone': contact.phone,
+                'email': contact.email,
+                'is_active': contact.is_active
+            })
 
         load_to_json('contacts', contacts)
 
