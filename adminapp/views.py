@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+# from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -142,9 +142,6 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     page_title = 'Админка / Редактирование категории продуктов'
     success_url = reverse_lazy('adminapp:categories')
     form_class = AdminProductCategoryCreateForm
-    # для возвращения на страницу продукта
-    # def get_success_url(self):
-    #     return reverse('adminapp:category_update', kwargs={'pk': self.object.pk})
 
 
 @user_passes_test(lambda x: x.is_superuser)
