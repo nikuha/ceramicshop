@@ -10,8 +10,7 @@ from basketapp.models import Basket
 @login_required
 def basket(request):
     content = {
-        'page_title': 'Корзина',
-        'basket': request.user.basket.order_by('product__category').all()
+        'page_title': 'Корзина'
     }
     return render(request, 'basketapp/basket.html', content)
 

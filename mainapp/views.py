@@ -6,8 +6,7 @@ from mainapp.models import ProductCategory, Product, Contact
 def index(request):
     context = {
         'page_title': 'главная',
-        'content_class': 'main-page',
-        'basket': get_basket(request)
+        'content_class': 'main-page'
     }
     return render(request, 'mainapp/index.html', context)
 
@@ -23,8 +22,7 @@ def hot_products(request):
         'categories': categories,
         'products': products,
         'category_id': -1,
-        'hot_product': hot_product,
-        'basket': get_basket(request)
+        'hot_product': hot_product
     }
     return render(request, 'mainapp/products_hot.html', context)
 
@@ -56,8 +54,7 @@ def products(request, pk):
         'categories': categories,
         'products': products_paginator,
         'category_id': pk,
-        'hot_product': None,
-        'basket': get_basket(request)
+        'hot_product': None
     }
     return render(request, 'mainapp/products.html', context)
 
@@ -70,8 +67,7 @@ def product(request, pk=None):
         'page_title': product.name,
         'categories': categories,
         'product': product,
-        'category_id': product.category_id,
-        'basket': get_basket(request)
+        'category_id': product.category_id
     }
     return render(request, 'mainapp/product.html', context)
 
@@ -80,14 +76,9 @@ def contacts(request):
     items = Contact.objects.filter(is_active=True).order_by('pk')
     context = {
         'page_title': 'контакты',
-        'contacts': items,
-        'basket': get_basket(request)
+        'contacts': items
     }
     return render(request, 'mainapp/contacts.html', context)
-
-
-def get_basket(request):
-    return request.user.is_authenticated and request.user.basket.all() or []
 
 
 def handler404(request, exception=None):
