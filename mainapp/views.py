@@ -7,7 +7,6 @@ def index(request):
     context = {
         'page_title': 'главная',
         'content_class': 'main-page',
-        'main_path': main_path(request),
         'basket': get_basket(request)
     }
     return render(request, 'mainapp/index.html', context)
@@ -25,7 +24,6 @@ def hot_products(request):
         'products': products,
         'category_id': -1,
         'hot_product': hot_product,
-        'main_path': main_path(request),
         'basket': get_basket(request)
     }
     return render(request, 'mainapp/products_hot.html', context)
@@ -59,7 +57,6 @@ def products(request, pk):
         'products': products_paginator,
         'category_id': pk,
         'hot_product': None,
-        'main_path': main_path(request),
         'basket': get_basket(request)
     }
     return render(request, 'mainapp/products.html', context)
@@ -74,7 +71,6 @@ def product(request, pk=None):
         'categories': categories,
         'product': product,
         'category_id': product.category_id,
-        'main_path': main_path(request),
         'basket': get_basket(request)
     }
     return render(request, 'mainapp/product.html', context)
@@ -85,7 +81,6 @@ def contacts(request):
     context = {
         'page_title': 'контакты',
         'contacts': items,
-        'main_path': main_path(request),
         'basket': get_basket(request)
     }
     return render(request, 'mainapp/contacts.html', context)
@@ -99,7 +94,3 @@ def handler404(request, exception=None):
     response = render(request, "mainapp/404.html")
     response.status_code = 404
     return response
-
-
-def main_path(request):
-    return ':'.join(request.resolver_match.namespaces) + ':' + request.resolver_match.url_name

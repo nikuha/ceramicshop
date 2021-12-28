@@ -37,7 +37,7 @@ def login(request):
     else:
         login_form = ShopUserLoginForm()
 
-    content = {'page_title': 'Вход', 'login_form': login_form, 'main_path': main_path(request), 'next_url': next_url}
+    content = {'page_title': 'Вход', 'login_form': login_form, 'next_url': next_url}
     return render(request, 'authapp/login.html', content)
 
 
@@ -91,9 +91,5 @@ def edit(request):
     else:
         edit_form = ShopUserEditForm(instance=request.user)
 
-    content = {'page_title': 'Редактирование', 'edit_form': edit_form, 'main_path': main_path(request)}
+    content = {'page_title': 'Редактирование', 'edit_form': edit_form}
     return render(request, 'authapp/edit.html', content)
-
-
-def main_path(request):
-    return ':'.join(request.resolver_match.namespaces) + ':' + request.resolver_match.url_name
