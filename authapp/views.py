@@ -1,9 +1,14 @@
+from django.conf import settings
 from django.contrib import auth
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView
 
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.mixin import PageContextMixin
+from authapp.models import ShopUser
 
 
 def login(request):
@@ -41,17 +46,41 @@ def logout(request):
     return HttpResponseRedirect(reverse('authapp:login'))
 
 
-def register(request):
-    if request.method == 'POST':
-        register_form = ShopUserRegisterForm(request.POST, request.FILES)
-        if register_form.is_valid():
-            register_form.save()
-            return HttpResponseRedirect(reverse('authapp:login'))
-    else:
-        register_form = ShopUserRegisterForm()
+class RegisterShopUserView(FormView, PageContextMixin):
+    model = ShopUser
+    template_name = 'authapp/register.html'
+    page_title = 'Регистрация'
+    form_class = ShopUserRegisterForm
+    success_url = reverse_lazy('authapp:login')
 
-    content = {'page_title': 'Регистрация', 'register_form': register_form, 'main_path': main_path(request)}
-    return render(request, 'authapp/register.html', content)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            if self.send_verify_link(user):
+                return HttpResponseRedirect(self.success_url)
+        return render(request, self.template_name, {'form': form, 'page_title': self.page_title})
+
+    @staticmethod
+    def verify(self, email, activate_key):
+        try:
+            user = ShopUser.objects.get(email=email)
+            if user and user.activation_key == activate_key and not user.is_activation_key_expired():
+                user.activation_key = ''
+                user.activation_key_expires = None
+                user.is_active = True
+                user.save()
+                auth.login(self, user)
+            return render(self, 'authapp/verification.html')
+        except Exception as e:
+            return HttpResponseRedirect(reverse('index'))
+
+    @staticmethod
+    def send_verify_link(user):
+        verify_link = reverse('authapp:verify', args=[user.email, user.activation_key])
+        subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
+        message = f'Для подтверждения учетной записи {user.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
+        return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
 
 
 def edit(request):

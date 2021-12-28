@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-%kx*c$@stl@pazh)547278gxuiq&qv8)8h+$w87m)g2vfkuh1*'
+load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,13 +126,27 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+CURRENCY_SYMBOL = '&#8381;'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authapp.ShopUser'
-
 LOGIN_URL = '/auth/login/'
 
-CURRENCY_SYMBOL = '&#8381;'
+DOMAIN_NAME = 'http://localhost:8000'
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True if os.getenv('EMAIL_USE_SSL') == 'True' else False
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/emails/'
+
+# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+# # python -m smtpd -n -c DebuggingServer localhost:25
+
