@@ -3,7 +3,7 @@ from mainapp.models import ProductCategory, Product, Contact
 import json
 import os
 
-JSON_PATH = 'mainapp/json'
+JSON_PATH = 'mainapp/fixtures'
 
 
 def load_to_json(file_name, data):
