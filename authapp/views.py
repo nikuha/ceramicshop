@@ -61,7 +61,6 @@ class RegisterShopUserView(FormView, PageContextMixin):
                 return HttpResponseRedirect(self.success_url)
         return render(request, self.template_name, {'form': form, 'page_title': self.page_title})
 
-    @staticmethod
     def verify(self, email, activate_key):
         try:
             user = ShopUser.objects.get(email=email)
