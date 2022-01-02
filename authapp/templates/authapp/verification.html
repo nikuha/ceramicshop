@@ -1,0 +1,20 @@
+{% extends 'mainapp/base.html' %}
+
+{% block content %}
+    <div class="form-container">
+        <div class="title">Активация профиля</div>
+        {% if user.is_authenticated %}
+            <h3>Поздравляем!</h3>
+            <h4>Пользователь {{ user.username }} подтвержден.</h4>
+        {% else %}
+            <h3>Верификация не пройдена.</h3>
+        {% endif %}
+
+        <div class="margin-center margin-top center">
+            <a href="{% url 'mainapp:index' %}">
+                на главную
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

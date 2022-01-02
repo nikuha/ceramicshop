@@ -1,11 +1,11 @@
 from django.contrib.auth.decorators import user_passes_test
-# from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from adminapp.forms import AdminShopUserCreateForm, AdminShopUserUpdateForm
 from adminapp.forms import AdminContactCreateForm
@@ -29,25 +29,22 @@ class PageContextMixin:
         return context
 
 
-# для пагинации без CBV
-# def pagination(request, objects):
-#     paginator = Paginator(objects, 4)
-#     page = request.GET['page'] if 'page' in request.GET else 1
-#     try:
-#         objects_paginator = paginator.page(page)
-#     except PageNotAnInteger:
-#         objects_paginator = paginator.page(1)
-#     except EmptyPage:
-#         objects_paginator = paginator.page(paginator.num_pages)
-#     return objects_paginator
+class ToggleActiveMixin:
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        object = self.get_object()
+        object.is_active = not object.is_active
+        object.save()
+        success_url = self.success_url or self.get_success_url()
+        return HttpResponseRedirect(success_url)
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def index(request):
-    context = {
-        'page_title': 'Админка'
-    }
-    return render(request, 'adminapp/index.html', context)
+class IndexView(SuperUserOnlyMixin, TemplateView):
+    template_name = 'adminapp/index.html'
+    page_title = 'Админка'
 
 
 class ProductListView(SuperUserOnlyMixin, ListView):
@@ -111,14 +108,11 @@ class ProductUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
         return context
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def product_toggle_active(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+class ProductToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
+    model = Product
 
-    if request.method == 'POST':
-        product.is_active = not product.is_active
-        product.save()
-    return HttpResponseRedirect(reverse('adminapp:category_products', args=[product.category_id]))
+    def get_success_url(self):
+        return reverse('adminapp:category_products', args=[self.get_object().category_id])
 
 
 class ProductCategoryListView(SuperUserOnlyMixin, PageContextMixin, ListView):
@@ -144,14 +138,9 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     form_class = AdminProductCategoryCreateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def category_toggle_active(request, pk):
-    category = get_object_or_404(ProductCategory, pk=pk)
-
-    if request.method == 'POST':
-        category.is_active = not category.is_active
-        category.save()
-    return HttpResponseRedirect(reverse('adminapp:categories'))
+class CategoryToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
+    model = ProductCategory
+    success_url = reverse_lazy('adminapp:categories')
 
 
 class ContactListView(SuperUserOnlyMixin, PageContextMixin, ListView):
@@ -177,14 +166,9 @@ class ContactUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
     form_class = AdminContactCreateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def contact_toggle_active(request, pk):
-    contact = get_object_or_404(Contact, pk=pk)
-
-    if request.method == 'POST':
-        contact.is_active = not contact.is_active
-        contact.save()
-    return HttpResponseRedirect(reverse('adminapp:contacts'))
+class ContactToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
+    model = Contact
+    success_url = reverse_lazy('adminapp:contacts')
 
 
 class ShopUserListView(SuperUserOnlyMixin, PageContextMixin, ListView):
@@ -211,11 +195,6 @@ class ShopUserUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
     form_class = AdminShopUserUpdateForm
 
 
-@user_passes_test(lambda x: x.is_superuser)
-def user_toggle_active(request, pk):
-    user = get_object_or_404(ShopUser, pk=pk)
-
-    if request.method == 'POST':
-        user.is_active = not user.is_active
-        user.save()
-    return HttpResponseRedirect(reverse('adminapp:users'))
+class ShopUserToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
+    model = ShopUser
+    success_url = reverse_lazy('adminapp:users')

@@ -9,10 +9,10 @@
 {% block content %}
     {% if hot_product %}
         <div class="hot-product-container">
-            <div class="image-container" style="background-image: url('{{ hot_product.image_or_default }}')">
+            <div class="image-container pointer" style="background-image: url('{{ hot_product.image_or_default }}')" onclick="document.location='{% url 'mainapp:products:product' hot_product.pk %}'">
             </div>
             <div class="description-container column-middle">
-                <div class="title">{{ hot_product.name|title }}</div>
+                <a class="title" href="{% url 'mainapp:products:product' hot_product.pk %}">{{ hot_product.name|title }}</a>
                 <div class="hot">Горячее предложение</div>
                 {% if hot_product.description %}
                     <div>{{ hot_product.description }}</div>{% endif %}
@@ -23,7 +23,7 @@
     {% endif %}
     <div class="simple-title">Похожие продукты:</div>
     <div class="products-container">
-        {% for product in products %}
+        {% for product in object_list %}
             <div class="item-container pointer" style="background-image: url('{{ product.image_or_default }}')"
                  onclick="document.location='{{ product.url }}'">
                 <div class="title">

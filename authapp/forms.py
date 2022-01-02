@@ -26,6 +26,13 @@ class ShopUserRegisterForm(UserCreationForm):
             field.widget.attrs['class'] = field_name
             field.help_text = ''
 
+    def save(self, commit=True):
+        user = super(ShopUserRegisterForm, self).save()
+        user.is_active = False
+        user.set_activation_key()
+        user.save()
+        return user
+
     def clean_age(self):
         data = self.cleaned_data['age']
         if data < 18:

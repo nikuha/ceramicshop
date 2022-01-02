@@ -8,7 +8,7 @@
 {% block content %}
     {% include 'mainapp/includes/inc__pagination.html' with objects=products %}
     <div class="products-container">
-        {% for product in products %}
+        {% for product in object_list %}
             <div class="item-container pointer" style="background-image: url('{{ product.image_or_default }}')"
                  onclick="document.location='{{ product.url }}'">
                 <div class="title">

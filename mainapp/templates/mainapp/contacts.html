@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="contacts-container">
-            {% for contact in contacts %}
+            {% for contact in object_list %}
                 <div class="item-container">
                     <div class="city">{{ contact.city }}</div>
                     <div class="phone">{{ contact.phone }}</div>

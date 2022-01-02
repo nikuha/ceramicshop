@@ -1,71 +1,72 @@
+from django.conf import settings
 from django.contrib import auth
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import FormView, UpdateView
 
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.mixin import PageContextMixin
+from authapp.models import ShopUser
 
 
-def login(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('mainapp:index'))
-
-    if 'next' in request.GET.keys():
-        next_url = request.GET['next']
-    elif 'next' in request.POST.keys():
-        next_url = request.POST['next']
-    else:
-        next_url = ''
-
-    if request.method == 'POST':
-        login_form = ShopUserLoginForm(data=request.POST)
-        if login_form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-
-            user = auth.authenticate(username=username, password=password)
-            if user and user.is_active:
-                auth.login(request, user)
-                if not next_url:
-                    next_url = reverse('mainapp:index')
-                return HttpResponseRedirect(next_url)
-    else:
-        login_form = ShopUserLoginForm()
-
-    content = {'page_title': 'Вход', 'login_form': login_form, 'main_path': main_path(request), 'next_url': next_url}
-    return render(request, 'authapp/login.html', content)
+class UserOnlyMixin:
+    @method_decorator(user_passes_test(lambda x: x.is_authenticated))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
-def logout(request):
-    auth.logout(request)
-    return HttpResponseRedirect(reverse('authapp:login'))
+class ShopUserLoginView(LoginView, PageContextMixin):
+    template_name = 'authapp/login.html'
+    form_class = ShopUserLoginForm
+    page_title = 'Авторизация'
+
+    def get_success_url(self):
+        if 'next' in self.request.GET.keys() and self.request.GET['next']:
+            return self.request.GET['next']
+        elif 'next' in self.request.POST.keys() and self.request.POST['next']:
+            return self.request.POST['next']
+        return settings.LOGIN_REDIRECT_URL
 
 
-def register(request):
-    if request.method == 'POST':
-        register_form = ShopUserRegisterForm(request.POST, request.FILES)
-        if register_form.is_valid():
-            register_form.save()
-            return HttpResponseRedirect(reverse('authapp:login'))
-    else:
-        register_form = ShopUserRegisterForm()
-
-    content = {'page_title': 'Регистрация', 'register_form': register_form, 'main_path': main_path(request)}
-    return render(request, 'authapp/register.html', content)
+class ShopUserLogoutView(LogoutView):
+    template_name = 'mainapp/index.html'
 
 
-def edit(request):
-    if request.method == 'POST':
-        edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
-            edit_form.save()
-            return HttpResponseRedirect(reverse('authapp:edit'))
-    else:
-        edit_form = ShopUserEditForm(instance=request.user)
+class ShopUserRegisterView(FormView, PageContextMixin):
+    model = ShopUser
+    template_name = 'authapp/register.html'
+    page_title = 'Регистрация'
+    form_class = ShopUserRegisterForm
+    success_url = reverse_lazy('authapp:login')
 
-    content = {'page_title': 'Редактирование', 'edit_form': edit_form, 'main_path': main_path(request)}
-    return render(request, 'authapp/edit.html', content)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            if user.send_verify_link():
+                return HttpResponseRedirect(self.success_url)
+        return render(request, self.template_name, {'form': form, 'page_title': self.page_title})
+
+    def verify(self, email, activate_key):
+        try:
+            user = ShopUser.objects.get(email=email)
+            if user.check_activation_key(activate_key):
+                auth.login(self, user)
+            return render(self, 'authapp/verification.html')
+        except Exception as e:
+            return HttpResponseRedirect(reverse('mainapp:index'))
 
 
-def main_path(request):
-    return ':'.join(request.resolver_match.namespaces) + ':' + request.resolver_match.url_name
+class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
+    model = ShopUser
+    template_name = 'authapp/edit.html'
+    page_title = 'Админка / Редактирование профиля'
+    form_class = ShopUserEditForm
+    success_url = reverse_lazy('authapp:edit')
+
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(ShopUser, pk=self.request.user.pk)

@@ -1,19 +1,25 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.conf import settings
+from django.views.generic import TemplateView
 
 from basketapp.models import Basket
 
 
-@login_required
-def basket(request):
-    content = {
-        'page_title': 'Корзина',
-        'basket': request.user.basket.order_by('product__category').all()
-    }
-    return render(request, 'basketapp/basket.html', content)
+class PageContextMixin:
+    page_title = ''
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.page_title
+        return context
+
+
+class BasketView(PageContextMixin, TemplateView):
+    template_name = 'basketapp/basket.html'
+    page_title = 'Корзина'
 
 
 @login_required

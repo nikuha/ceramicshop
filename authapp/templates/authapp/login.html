@@ -5,8 +5,8 @@
     <div class="title">Вход в систему</div>
     <form class="base-form margin-center" action="{% url 'authapp:login' %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next_url }}">
-        {{ login_form.as_p }}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {{ form.as_p }}
         <p>
             <label></label>
             <input class="submit" type="submit" value="войти">
