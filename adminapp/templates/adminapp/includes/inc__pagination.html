@@ -1,8 +1,8 @@
 {% if is_paginated  %}
 <div class="pagination">
-    {% if has_previous %}
+    {% if page_obj.has_previous %}
         <div class="item">
-            <a href="?page={{ previous_page_number }}">
+            <a href="?page={{ page_obj.previous_page_number }}">
                 <<
             </a>
         </div>
@@ -16,9 +16,9 @@
             </a>
         </div>
     {% endfor %}
-    {% if has_next %}
+    {% if page_obj.has_next %}
         <div class="item">
-            <a href="?page={{ next_page_number }}">
+            <a href="?page={{ page_obj.next_page_number }}">
                 >>
             </a>
         </div>

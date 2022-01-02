@@ -1,84 +1,85 @@
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import TemplateView, ListView, DetailView
+
 from mainapp.models import ProductCategory, Product, Contact
 
 
-def index(request):
-    context = {
-        'page_title': 'главная',
-        'content_class': 'main-page'
-    }
-    return render(request, 'mainapp/index.html', context)
+class PageContextMixin:
+    page_title = ''
+    category_id = 0
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = self.page_title
+        context['category_id'] = self.category_id
+        return context
 
 
-def hot_products(request):
-    categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
-    hot_product = Product.objects.filter(is_active=True, category__is_active=True).order_by('?').first()
-    products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(
-        pk=hot_product.pk).order_by('?').all()[:3]
-
-    context = {
-        'page_title': 'посуда',
-        'categories': categories,
-        'products': products,
-        'category_id': -1,
-        'hot_product': hot_product
-    }
-    return render(request, 'mainapp/products_hot.html', context)
+class IndexView(PageContextMixin, TemplateView):
+    template_name = 'mainapp/index.html'
+    page_title = 'Главная'
 
 
-def pagination(request, objects):
-    paginator = Paginator(objects, 6)
-    page = request.GET['page'] if 'page' in request.GET else 1
-    try:
-        objects_paginator = paginator.page(page)
-    except PageNotAnInteger:
-        objects_paginator = paginator.page(1)
-    except EmptyPage:
-        objects_paginator = paginator.page(paginator.num_pages)
-    return objects_paginator
+class HotProductsView(PageContextMixin, ListView):
+    model = Product
+    template_name = 'mainapp/products_hot.html'
+    page_title = 'посуда'
+    category_id = -1
+    hot_product = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['hot_product'] = self.hot_product
+        return context
+
+    def get_queryset(self, **kwargs):
+        self.hot_product = Product.objects.filter(is_active=True, category__is_active=True).order_by('?').first()
+        qs = super().get_queryset()
+        products = qs.filter(category=self.hot_product.category, is_active=True).exclude(
+            pk=self.hot_product.pk).order_by('?').all()[:3]
+        return products
 
 
-def products(request, pk):
-    categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
-    if pk:
-        category = get_object_or_404(ProductCategory, id=pk)
-        products = category.product_set.filter(is_active=True).order_by('pk')
-    else:
-        products = Product.objects.filter(is_active=True).order_by('-pk').all()
+class ProductsView(PageContextMixin, ListView):
+    model = Product
+    template_name = 'mainapp/products.html'
+    page_title = 'посуда'
+    paginate_by = 6
 
-    products_paginator = pagination(request, products)
-
-    context = {
-        'page_title': 'посуда',
-        'categories': categories,
-        'products': products_paginator,
-        'category_id': pk,
-        'hot_product': None
-    }
-    return render(request, 'mainapp/products.html', context)
+    def get_queryset(self, **kwargs):
+        qs = super().get_queryset()
+        pk = self.kwargs['pk']
+        if pk:
+            category = get_object_or_404(ProductCategory, id=pk, is_active=True)
+            qs = qs.filter(is_active=True, category=category).order_by('pk')
+            self.category_id = pk
+        else:
+            qs = qs.filter(is_active=True).order_by('-pk').all()
+        return qs
 
 
-def product(request, pk=None):
-    categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
-    product = Product.objects.get(pk=pk)
+class ProductView(DetailView):
+    model = Product
+    template_name = 'mainapp/product.html'
 
-    context = {
-        'page_title': product.name,
-        'categories': categories,
-        'product': product,
-        'category_id': product.category_id
-    }
-    return render(request, 'mainapp/product.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cur_object = self.get_object()
+        context['page_title'] = cur_object.name
+        context['category_id'] = cur_object.category_id
+        return context
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset().filter(is_active=True)
 
 
-def contacts(request):
-    items = Contact.objects.filter(is_active=True).order_by('pk')
-    context = {
-        'page_title': 'контакты',
-        'contacts': items
-    }
-    return render(request, 'mainapp/contacts.html', context)
+class ContactsView(PageContextMixin, ListView):
+    model = Contact
+    template_name = 'mainapp/contacts.html'
+    page_title = 'контакты'
+
+    def get_queryset(self, **kwargs):
+        return super().get_queryset().filter(is_active=True).order_by('pk')
 
 
 def handler404(request, exception=None):

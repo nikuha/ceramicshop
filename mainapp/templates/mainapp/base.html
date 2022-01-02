@@ -21,7 +21,7 @@
             {% include 'mainapp/includes/inc__main_menu.html' %}
         </div>
     </div>
-    <div class="middle-container {{ content_class }}">
+    <div class="middle-container {% if main_path == 'mainapp:index' %}main-page{% endif %}">
         {% block products_menu %}{% endblock %}
         <div class="inner-container">
             {% block content %}
