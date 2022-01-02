@@ -19,7 +19,7 @@ class UserOnlyMixin:
         return super().dispatch(*args, **kwargs)
 
 
-class LoginView(LoginView, PageContextMixin):
+class ShopUserLoginView(LoginView, PageContextMixin):
     template_name = 'authapp/login.html'
     form_class = ShopUserLoginForm
     page_title = 'Авторизация'
@@ -32,11 +32,11 @@ class LoginView(LoginView, PageContextMixin):
         return settings.LOGIN_REDIRECT_URL
 
 
-class LogoutView(LogoutView):
+class ShopUserLogoutView(LogoutView):
     template_name = 'mainapp/index.html'
 
 
-class RegisterShopUserView(FormView, PageContextMixin):
+class ShopUserRegisterView(FormView, PageContextMixin):
     model = ShopUser
     template_name = 'authapp/register.html'
     page_title = 'Регистрация'
@@ -47,31 +47,18 @@ class RegisterShopUserView(FormView, PageContextMixin):
         form = self.form_class(data=request.POST)
         if form.is_valid():
             user = form.save()
-            if self.send_verify_link(user):
+            if user.send_verify_link():
                 return HttpResponseRedirect(self.success_url)
         return render(request, self.template_name, {'form': form, 'page_title': self.page_title})
 
     def verify(self, email, activate_key):
         try:
             user = ShopUser.objects.get(email=email)
-            if user and user.activation_key == activate_key and not user.is_activation_key_expired():
-                user.activation_key = ''
-                user.activation_key_expires = None
-                user.is_active = True
-                user.save()
+            if user.check_activation_key(activate_key):
                 auth.login(self, user)
             return render(self, 'authapp/verification.html')
         except Exception as e:
-            return HttpResponseRedirect(reverse('index'))
-
-    @staticmethod
-    def send_verify_link(user):
-        verify_link = reverse('authapp:verify', args=[user.email, user.activation_key])
-        subject = f'Для активации учетной записи {user.username} пройдите по ссылке'
-        message = f'Для подтверждения учетной записи {user.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
-        # return send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-        user.email_user(subject, message, settings.EMAIL_HOST_USER, fail_silently=False)
-        return True
+            return HttpResponseRedirect(reverse('mainapp:index'))
 
 
 class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
