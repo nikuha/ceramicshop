@@ -4,6 +4,8 @@ import random
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.templatetags.static import static
 from datetime import timedelta
 
@@ -45,3 +47,27 @@ class ShopUser(AbstractUser):
     @property
     def image_or_default(self):
         return self.avatar.url if self.avatar else static('img/default.png')
+
+
+class ShopUserProfile(models.Model):
+    MALE = 'M'
+    FEMALE = 'W'
+
+    GENDER_CHOICES = (
+        (MALE, 'М'),
+        (FEMALE, 'Ж'),
+    )
+
+    shopuser = models.OneToOneField(ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
+    about = models.TextField(verbose_name='о себе', blank=True, null=True)
+    gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=1)
+    languages = models.CharField(verbose_name='язык', blank=True,null=True, max_length=10)
+
+    @receiver(post_save, sender=ShopUser)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            ShopUserProfile.objects.create(shopuser=instance)
+
+    @receiver(post_save, sender=ShopUser)
+    def save_user_profile(sender, instance, created, **kwargs):
+        instance.shopuserprofile.save()

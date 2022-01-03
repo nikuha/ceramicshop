@@ -3,12 +3,12 @@ from django.contrib import auth
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LogoutView, LoginView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, UpdateView
 
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileEditForm
 from authapp.mixin import PageContextMixin
 from authapp.models import ShopUser
 
@@ -68,5 +68,17 @@ class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
     form_class = ShopUserEditForm
     success_url = reverse_lazy('authapp:edit')
 
+    def post(self, request, *args, **kwargs):
+        form = ShopUserEditForm(data=request.POST, files=request.FILES, instance=request.user)
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        if form.is_valid() and profile_form.is_valid():
+            form.save()
+        return redirect(self.success_url)
+
     def get_object(self, *args, **kwargs):
         return get_object_or_404(ShopUser, pk=self.request.user.pk)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileUpdateView, self).get_context_data(**kwargs)
+        context['profile'] = ShopUserProfileEditForm(instance=self.request.user.shopuserprofile)
+        return context

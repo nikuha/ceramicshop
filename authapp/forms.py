@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 import django.forms as forms
 
-from authapp.models import ShopUser
+from authapp.models import ShopUser, ShopUserProfile
 
 
 class ShopUserLoginForm(AuthenticationForm):
@@ -59,3 +59,17 @@ class ShopUserEditForm(UserChangeForm):
         if data < 18:
             raise forms.ValidationError("У нас сторого 18+!")
         return data
+
+
+class ShopUserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ShopUserProfile
+        exclude = ('shopuser',)
+
+    # def __init__(self, *args, **kwargs):
+    #     super(ShopUserEditForm, self).__init__(*args, **kwargs)
+    #     for field_name, field in self.fields.items():
+    #         if field_name != 'gender':
+    #             field.widget.attrs['class'] = 'form-control py-4'
+    #         else:
+    #             field.widget.attrs['class'] = 'form-control'
