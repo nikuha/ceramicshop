@@ -33,7 +33,7 @@ class ShopUser(AbstractUser):
         message = f'Для подтверждения учетной записи {self.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
         self.email_user(subject, message, settings.EMAIL_HOST_USER, fail_silently=False)
         return True
-    
+
     def check_activation_key(self, activate_key):
         if self and self.activation_key == activate_key and not self.is_activation_key_expired():
             self.activation_key = ''
@@ -61,7 +61,7 @@ class ShopUserProfile(models.Model):
     shopuser = models.OneToOneField(ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
     about = models.TextField(verbose_name='о себе', blank=True, null=True)
     gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=1)
-    languages = models.CharField(verbose_name='язык', blank=True,null=True, max_length=10)
+    languages = models.CharField(verbose_name='язык', blank=True, null=True, max_length=10)
 
     @receiver(post_save, sender=ShopUser)
     def create_user_profile(sender, instance, created, **kwargs):
