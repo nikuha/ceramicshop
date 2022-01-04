@@ -84,6 +84,11 @@ input, select, textarea {
     flex-wrap: wrap;
 }
 
+.links {
+    justify-content: right;
+    padding: 5px 0;
+}
+
 .menu-link {
     margin-left: 10px;
     padding-bottom: 3px;
@@ -95,7 +100,7 @@ input, select, textarea {
     transition: .3s;
 }
 
-.menu-link:hover, .menu-link.active {
+.menu-link a:hover, .menu-link.active a{
     border-bottom: 1px solid white;
 }
 
@@ -475,7 +480,7 @@ input, select, textarea {
 }
 
 .form-container {
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .form-container .title {
@@ -621,4 +626,36 @@ input, select, textarea {
 .pagination .item.not_active {
     opacity: .4;
     padding: 3px 7px;
+}
+
+.orders-table{
+    width: 850px;
+    max-width: 100%;
+    margin: 30px auto;
+}
+
+.orders-table td, .orders-table th{
+    padding: 5px;
+    text-align: center;
+}
+
+.a-button a {
+    display: block;
+    width: fit-content;
+}
+
+.a-button a, button.standard {
+    padding: 7px 10px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: white;
+}
+
+.a-button.red a, button.standard.red {
+    background-color: #ef9090;
+}
+
+.a-button.green a, button.standard.green {
+    background-color: #95a574;
 }

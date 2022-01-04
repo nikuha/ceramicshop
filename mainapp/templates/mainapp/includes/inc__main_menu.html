@@ -1,37 +1,42 @@
 {% load my_tags %}
 
-<div class="links row flex-wrap">
-    <div class="menu-link {% if main_path == 'mainapp:index' %}active{% endif %}"><a href="{% url 'mainapp:index' %}">Главная</a>
-    </div>
-    <div class="menu-link {% if 'mainapp:products' in main_path %}active{% endif %}"><a
-            href="{% url 'mainapp:products:index' %}">Посуда</a></div>
-    <div class="menu-link {% if main_path == 'mainapp:contacts' %}active{% endif %}"><a
-            href="{% url 'mainapp:contacts' %}">Контакты</a></div>
+<div class="">
 
-    <div class="menu-link">|</div>
-
-    {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-            <div class="menu-link"><a href="{% url 'adminapp:index' %}">Админка</a></div>
+    <div class="links row flex-wrap">
+        {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+                <div class="menu-link"><a href="{% url 'adminapp:index' %}">Админка</a></div>
+            {% endif %}
+            <div class="menu-link {% if main_path == 'authapp:edit' %}active{% endif %}">
+                <a href="{% url 'authapp:edit' %}"> {{ user.first_or_user_name|title }}</a></div>
         {% endif %}
-        <div class="menu-link {% if main_path == 'authapp:edit' %}active{% endif %}"><a
-                href="{% url 'authapp:edit' %}">
-            {% if user.first_name %}{{ user.first_name|title }}{% else %}{{ user.username }}{% endif %}</a></div>
-    {% endif %}
 
-    {% if user.is_authenticated %}
-        <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
-        {% if basket %}
-            <div class="menu-link">|</div>
-            <div class="menu-link">
-                <a href="{% url 'basketapp:view' %}" class="basket">
-                    <span id="top_total_quantity">{{ basket.0.total_quantity }}</span> шт.
-                    <span id="top_total_cost">{{ basket.0.total_cost|with_currency }}</span>
-                </a>
+        {% if user.is_authenticated %}
+            <div class="menu-link {% if main_path == 'ordersapp:list' %}active{% endif %}">
+                <a href="{% url 'ordersapp:list' %}">Заказы</a>
             </div>
+            <div class="menu-link"><a href="{% url 'authapp:logout' %}">Выйти</a></div>
+            {% if basket %}
+                <div class="menu-link">|</div>
+                <div class="menu-link">
+                    <a href="{% url 'basketapp:view' %}" class="basket">
+                        <span id="top_total_quantity">{{ basket.0.total_quantity }}</span> шт.
+                        <span id="top_total_cost">{{ basket.0.total_cost|with_currency }}</span>
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="menu-link {% if main_path == 'authapp:login' %}active{% endif %}"><a
+                    href="{% url 'authapp:login' %}">Войти</a></div>
         {% endif %}
-    {% else %}
-        <div class="menu-link {% if main_path == 'authapp:login' %}active{% endif %}"><a
-                href="{% url 'authapp:login' %}">Войти</a></div>
-    {% endif %}
+    </div>
+
+    <div class="links row flex-wrap">
+        <div class="menu-link {% if main_path == 'mainapp:index' %}active{% endif %}"><a href="{% url 'mainapp:index' %}">Главная</a>
+        </div>
+        <div class="menu-link {% if 'mainapp:products' in main_path %}active{% endif %}"><a
+                href="{% url 'mainapp:products:index' %}">Посуда</a></div>
+        <div class="menu-link {% if main_path == 'mainapp:contacts' %}active{% endif %}"><a
+                href="{% url 'mainapp:contacts' %}">Контакты</a></div>
+    </div>
 </div>
