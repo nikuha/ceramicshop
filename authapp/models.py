@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 
-class ShopUser(AbstractUser):
+class User(AbstractUser):
     age = models.PositiveSmallIntegerField(verbose_name='возраст', null=True)
     avatar = models.ImageField(verbose_name='аватарка', upload_to='user_avatars', blank=True)
 
@@ -49,7 +49,7 @@ class ShopUser(AbstractUser):
         return self.avatar.url if self.avatar else static('img/default.png')
 
 
-class ShopUserProfile(models.Model):
+class UserProfile(models.Model):
     MALE = 'M'
     FEMALE = 'W'
 
@@ -58,16 +58,16 @@ class ShopUserProfile(models.Model):
         (FEMALE, 'Ж'),
     )
 
-    shopuser = models.OneToOneField(ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
     about = models.TextField(verbose_name='о себе', blank=True, null=True)
     gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=1)
     languages = models.CharField(verbose_name='язык', blank=True, null=True, max_length=10)
 
-    @receiver(post_save, sender=ShopUser)
+    @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            ShopUserProfile.objects.create(shopuser=instance)
+            UserProfile.objects.create(user=instance)
 
-    @receiver(post_save, sender=ShopUser)
+    @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, created, **kwargs):
-        instance.shopuserprofile.save()
+        instance.userprofile.save()

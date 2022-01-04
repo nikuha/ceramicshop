@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
-from authapp.models import ShopUser, ShopUserProfile
+from authapp.models import User, UserProfile
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        users = ShopUser.objects.all()
+        users = User.objects.all()
         for user in users:
-            ShopUserProfile.objects.create(shopuser=user)
+            UserProfile.objects.create(user=user)

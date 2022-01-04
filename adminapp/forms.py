@@ -1,13 +1,13 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 import django.forms as forms
 
-from authapp.models import ShopUser
+from authapp.models import User
 from mainapp.models import Contact, ProductCategory, Product
 
 
-class AdminShopUserCreateForm(UserCreationForm):
+class AdminUserCreateForm(UserCreationForm):
     class Meta:
-        model = ShopUser
+        model = User
         fields = (
             'is_superuser', 'username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
@@ -24,9 +24,9 @@ class AdminShopUserCreateForm(UserCreationForm):
         return data
 
 
-class AdminShopUserUpdateForm(UserChangeForm):
+class AdminUserUpdateForm(UserChangeForm):
     class Meta:
-        model = ShopUser
+        model = User
         fields = ('is_superuser', 'username', 'password', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
     def __init__(self, *args, **kwargs):

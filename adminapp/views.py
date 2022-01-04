@@ -7,10 +7,10 @@ from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from adminapp.forms import AdminShopUserCreateForm, AdminShopUserUpdateForm
+from adminapp.forms import AdminUserCreateForm, AdminUserUpdateForm
 from adminapp.forms import AdminContactCreateForm
 from adminapp.forms import AdminProductCreateForm, AdminProductCategoryCreateForm
-from authapp.models import ShopUser
+from authapp.models import User
 from mainapp.models import Contact, ProductCategory, Product
 
 
@@ -171,30 +171,30 @@ class ContactToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView)
     success_url = reverse_lazy('adminapp:contacts')
 
 
-class ShopUserListView(SuperUserOnlyMixin, PageContextMixin, ListView):
-    model = ShopUser
+class UserListView(SuperUserOnlyMixin, PageContextMixin, ListView):
+    model = User
     template_name = 'adminapp/users.html'
     page_title = 'Админка / Пользователи'
     ordering = ['-is_active', 'pk']
     paginate_by = 5
 
 
-class ShopUserCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
-    model = ShopUser
+class UserCreateView(SuperUserOnlyMixin, PageContextMixin, CreateView):
+    model = User
     template_name = 'adminapp/user_update.html'
     page_title = 'Админка / Добавление пользователя'
     success_url = reverse_lazy('adminapp:users')
-    form_class = AdminShopUserCreateForm
+    form_class = AdminUserCreateForm
 
 
-class ShopUserUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
-    model = ShopUser
+class UserUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView):
+    model = User
     template_name = 'adminapp/user_update.html'
     page_title = 'Админка / Редактирование пользователя'
     success_url = reverse_lazy('adminapp:users')
-    form_class = AdminShopUserUpdateForm
+    form_class = AdminUserUpdateForm
 
 
-class ShopUserToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
-    model = ShopUser
+class UserToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
+    model = User
     success_url = reverse_lazy('adminapp:users')

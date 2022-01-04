@@ -8,9 +8,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, UpdateView
 
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm, ShopUserProfileEditForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserEditForm, UserProfileEditForm
 from authapp.mixin import PageContextMixin
-from authapp.models import ShopUser
+from authapp.models import User
 
 
 class UserOnlyMixin:
@@ -19,9 +19,9 @@ class UserOnlyMixin:
         return super().dispatch(*args, **kwargs)
 
 
-class ShopUserLoginView(LoginView, PageContextMixin):
+class UserLoginView(LoginView, PageContextMixin):
     template_name = 'authapp/login.html'
-    form_class = ShopUserLoginForm
+    form_class = UserLoginForm
     page_title = 'Авторизация'
 
     def get_success_url(self):
@@ -32,15 +32,15 @@ class ShopUserLoginView(LoginView, PageContextMixin):
         return settings.LOGIN_REDIRECT_URL
 
 
-class ShopUserLogoutView(LogoutView):
+class UserLogoutView(LogoutView):
     template_name = 'mainapp/index.html'
 
 
-class ShopUserRegisterView(FormView, PageContextMixin):
-    model = ShopUser
+class UserRegisterView(FormView, PageContextMixin):
+    model = User
     template_name = 'authapp/register.html'
     page_title = 'Регистрация'
-    form_class = ShopUserRegisterForm
+    form_class = UserRegisterForm
     success_url = reverse_lazy('authapp:login')
 
     def post(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class ShopUserRegisterView(FormView, PageContextMixin):
 
     def verify(self, email, activate_key):
         try:
-            user = ShopUser.objects.get(email=email)
+            user = User.objects.get(email=email)
             if user.check_activation_key(activate_key):
                 auth.login(self, user)
             return render(self, 'authapp/verification.html')
@@ -62,23 +62,23 @@ class ShopUserRegisterView(FormView, PageContextMixin):
 
 
 class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
-    model = ShopUser
+    model = User
     template_name = 'authapp/edit.html'
     page_title = 'Админка / Редактирование профиля'
-    form_class = ShopUserEditForm
+    form_class = UserEditForm
     success_url = reverse_lazy('authapp:edit')
 
     def post(self, request, *args, **kwargs):
-        form = ShopUserEditForm(data=request.POST, files=request.FILES, instance=request.user)
-        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        form = UserEditForm(data=request.POST, files=request.FILES, instance=request.user)
+        profile_form = UserProfileEditForm(request.POST, instance=request.user.userprofile)
         if form.is_valid() and profile_form.is_valid():
             form.save()
         return redirect(self.success_url)
 
     def get_object(self, *args, **kwargs):
-        return get_object_or_404(ShopUser, pk=self.request.user.pk)
+        return get_object_or_404(User, pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-        context['profile'] = ShopUserProfileEditForm(instance=self.request.user.shopuserprofile)
+        context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
         return context

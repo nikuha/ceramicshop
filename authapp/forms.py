@@ -1,23 +1,23 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 import django.forms as forms
 
-from authapp.models import ShopUser, ShopUserProfile
+from authapp.models import User, UserProfile
 
 
-class ShopUserLoginForm(AuthenticationForm):
+class UserLoginForm(AuthenticationForm):
     class Meta:
-        model = ShopUser
+        model = User
         fields = ('username', 'password')
 
     def __init__(self, *args, **kwargs):
-        super(ShopUserLoginForm, self).__init__(*args, **kwargs)
+        super(UserLoginForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = field_name
 
 
-class ShopUserRegisterForm(UserCreationForm):
+class UserRegisterForm(UserCreationForm):
     class Meta:
-        model = ShopUser
+        model = User
         fields = ('username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
     def __init__(self, *args, **kwargs):
@@ -27,7 +27,7 @@ class ShopUserRegisterForm(UserCreationForm):
             field.help_text = ''
 
     def save(self, commit=True):
-        user = super(ShopUserRegisterForm, self).save()
+        user = super(UserRegisterForm, self).save()
         user.is_active = False
         user.set_activation_key()
         user.save()
@@ -40,9 +40,9 @@ class ShopUserRegisterForm(UserCreationForm):
         return data
 
 
-class ShopUserEditForm(UserChangeForm):
+class UserEditForm(UserChangeForm):
     class Meta:
-        model = ShopUser
+        model = User
         fields = ('username', 'password', 'email', 'first_name', 'last_name', 'age', 'avatar')
 
     def __init__(self, *args, **kwargs):
@@ -61,13 +61,13 @@ class ShopUserEditForm(UserChangeForm):
         return data
 
 
-class ShopUserProfileEditForm(forms.ModelForm):
+class UserProfileEditForm(forms.ModelForm):
     class Meta:
-        model = ShopUserProfile
-        exclude = ('shopuser',)
+        model = UserProfile
+        exclude = ('user',)
 
     # def __init__(self, *args, **kwargs):
-    #     super(ShopUserEditForm, self).__init__(*args, **kwargs)
+    #     super(UserEditForm, self).__init__(*args, **kwargs)
     #     for field_name, field in self.fields.items():
     #         if field_name != 'gender':
     #             field.widget.attrs['class'] = 'form-control py-4'
