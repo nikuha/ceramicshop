@@ -22,8 +22,8 @@ urlpatterns = [
     path('contacts/', adminapp.ContactListView.as_view(), name='contacts'),
     path('contacts/toggle_active/<int:pk>/', adminapp.ContactToggleActiveView.as_view(), name='contact_toggle_active'),
 
-    path('users/create/', adminapp.ShopUserCreateView.as_view(), name='user_create'),
-    path('users/update/<int:pk>/', adminapp.ShopUserUpdateView.as_view(), name='user_update'),
-    path('users/', adminapp.ShopUserListView.as_view(), name='users'),
-    path('users/toggle_active/<int:pk>/', adminapp.ShopUserToggleActiveView.as_view(), name='user_toggle_active'),
+    path('users/create/', adminapp.UserCreateView.as_view(), name='user_create'),
+    path('users/update/<int:pk>/', adminapp.UserUpdateView.as_view(), name='user_update'),
+    path('users/', adminapp.UserListView.as_view(), name='users'),
+    path('users/toggle_active/<int:pk>/', adminapp.UserToggleActiveView.as_view(), name='user_toggle_active'),
 ]

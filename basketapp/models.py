@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from authapp.models import ShopUser
+from authapp.models import User
 from django.conf import settings
 from mainapp.models import Product
 

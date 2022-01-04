@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from authapp.models import ShopUser
+from authapp.models import User
 from mainapp.models import ProductCategory, Product, Contact
 import json
 import os
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             new_contact = Contact(**contact)
             new_contact.save()
 
-        if not ShopUser.objects.filter(username='django').exists():
-            ShopUser.objects.create_superuser(username='django', email='django@geekshop.local', password='geekbrains')
+        if not User.objects.filter(username='django').exists():
+            User.objects.create_superuser(username='django', email='django@geekshop.local', password='geekbrains')
 
 
