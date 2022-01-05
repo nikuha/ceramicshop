@@ -295,10 +295,11 @@ input, select, textarea {
 
 .big-title {
     font-size: 25px;
+    margin-bottom: 10px;
 }
 
 .basket-container {
-    margin: 50px auto;
+    margin: 30px auto;
     width: 850px;
     max-width: 100%;
 }
@@ -639,6 +640,35 @@ input, select, textarea {
     text-align: center;
 }
 
+.orders-items-table{
+    max-width: 100%;
+    margin: 30px auto;
+}
+
+.orders-items-table td, .orders-items-table th{
+    padding: 4px;
+    text-align: center;
+}
+
+.orders-items-table td, .orders-table th{
+    padding: 5px;
+    text-align: center;
+}
+
+.orders-items-table select, input[type=number]{
+    height: 30px;
+    padding: 0 5px;
+}
+
+.orders-items-table select{
+    width: 400px;
+    max-width: 100%;
+}
+
+.orders-items-table input[type=number]{
+    width: 100px;
+}
+
 .a-button a {
     display: block;
     width: fit-content;
@@ -658,4 +688,22 @@ input, select, textarea {
 
 .a-button.green a, button.standard.green {
     background-color: #95a574;
+}
+
+.info-container .item{
+    display: flex;
+}
+
+.info-container .item > div{
+    width: 50%;
+    padding: 5px;
+}
+
+.info-container .item > div:first-child{
+    text-align: right;
+}
+
+.info-container .item > div.a-button:first-child a{
+    display: inline-block;
+    width: auto;
 }

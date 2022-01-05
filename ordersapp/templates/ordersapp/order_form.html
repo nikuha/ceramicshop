@@ -1,20 +1,21 @@
 {% extends "mainapp/base.html" %}
 {% load static %}
+{% load my_tags %}
 
 {% block content %}
-    {% include 'ordersapp/includes/inc_order_summary.html' %}
-    <div class="order_form">
+    <div class="basket-container">
+        {% include 'ordersapp/includes/inc_order_summary.html' %}
         <form action="" method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <table class="table">
+            <table class="orders-items-table">
                 {{ order_items.management_form }}
                 {% for form in order_items.forms %}
                     {% if forloop.first %}
                         <thead>
                         <tr>
                             {% for field in form.visible_fields %}
-                                <th class="{% cycle 'td1' 'td2' 'td3' %} order formset_td">
+                                <th class="{% cycle 'td1' 'td2' 'td3' %}">
                                     {{ field.label|capfirst }}
                                 </th>
                             {% endfor %}
@@ -23,32 +24,30 @@
                     {% endif %}
                     <tr class="formset_row">
                         {% for field in form.visible_fields %}
-                            <td class="{% cycle 'td1' 'td2' 'td3' %} order formset_td">
+                            <td class="{% cycle 'td1' 'td2' 'td3' %}">
                                 {% if forloop.first %}
                                     {% for hidden in form.hidden_fields %}
                                         {{ hidden }}
                                     {% endfor %}
                                 {% endif %}
+
                                 {{ field.errors.as_ul }}
 
                                 {% if field.name == 'price' %}
-                                    {% if not field.value %}
-                                    {% else %}
-                                        <span class="order_items-{{ forloop.parentloop.counter0 }}-price">
-                                            {{ field.value}} руб </span>
+                                    {% if field.value %}
+                                        <span>{{ field.value|with_currency }}</span>
                                     {% endif %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
-
-
                             </td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
             </table>
-            <button type="submit" value="сохранить" class="btn btn-default btn-round form-control last">сохранить
-            </button>
+            <div class="center">
+                <button type="submit" class="standard green">сохранить</button>
+            </div>
             {% include 'ordersapp/includes/inc_order_actions.html' %}
         </form>
     </div>

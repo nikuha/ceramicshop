@@ -6,50 +6,54 @@
     <div class="basket-container">
         <div class="big-title center">Ваши заказы, {{ user.first_or_user_name|title }}</div>
 
-        <table class="orders-table">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Создан</th>
-                <th>Обновлен</th>
-                <th>Статус</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in object_list %}
-                {% if item.is_active %}
-                    <tr>
-                        <td class="td1 orders_list">{{ item.pk }}</td>
-                        <td>{{ item.created|date:"d.m.Y H:i" }}</td>
-                        <td>{{ item.updated|date:"d.m.Y H:i" }}</td>
-                        <td>{{ item.get_status_display }}</td>
-                        <td>
-                            <div class="a-button green">
-                                <a href="{% url 'ordersapp:read' item.pk %}">Посмотреть</a>
-                            </div>
-                        </td>
-                        <td>
-                            {% if item.status == 'FM' %}
+        {% if object_list %}
+            <table class="orders-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Создан</th>
+                    <th>Обновлен</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in object_list %}
+                    {% if item.is_active %}
+                        <tr>
+                            <td class="td1 orders_list">{{ item.pk }}</td>
+                            <td>{{ item.created|date:"d.m.Y H:i" }}</td>
+                            <td>{{ item.updated|date:"d.m.Y H:i" }}</td>
+                            <td>{{ item.get_status_display }}</td>
+                            <td>
                                 <div class="a-button green">
-                                    <a href="{% url 'ordersapp:update' item.pk %}">Редактировать</a>
+                                    <a href="{% url 'ordersapp:read' item.pk %}">Посмотреть</a>
                                 </div>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item.status == 'FM' %}
-                                <div class="a-button red">
-                                    <a href="{% url 'ordersapp:delete' item.pk %}">Удалить</a>
-                                </div>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
-        <div class="center">
-            <button class="standard green" onclick="document.location='{% url 'mainapp:index' %}'">на главную</button>
-            <button class="standard green" onclick="document.location='{% url 'ordersapp:create' %}'">новый заказ</button>
+                            </td>
+                            <td>
+                                {% if item.status == 'FM' %}
+                                    <div class="a-button green">
+                                        <a href="{% url 'ordersapp:update' item.pk %}">Редактировать</a>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if item.status == 'FM' %}
+                                    <div class="a-button red">
+                                        <a href="{% url 'ordersapp:delete' item.pk %}">Удалить</a>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="center margin-top">Заказов пока нет</div>
+        {% endif %}
+        <div class="margin-top center">
+            <a href="{% url 'mainapp:index' %}">на главную</a> |
+            <a href="{% url 'ordersapp:create' %}">новый заказ</a>
         </div>
     </div>
 {% endblock %}
