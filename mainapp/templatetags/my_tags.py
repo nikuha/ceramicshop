@@ -12,4 +12,4 @@ def email_link(email):
 
 @register.filter()
 def with_currency(price):
-    return mark_safe(f'{round(price)}&nbsp;{settings.CURRENCY_SYMBOL}')
+    return mark_safe(f'{round(price)}&nbsp;{settings.CURRENCY_SYMBOL}') if price else ''

@@ -26,7 +26,8 @@ class OrderListView(PageContextMixin, ListView):
     page_title = 'Список заказов'
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, user=self.request.user)
+        # return super().get_queryset().filter(is_active=True, user=self.request.user)
+        return self.request.user.orders.filter(is_active=True)
 
 
 class OrderCreateView(PageContextMixin, CreateView):
@@ -44,13 +45,13 @@ class OrderCreateView(PageContextMixin, CreateView):
         else:
             basket_items = self.request.user.basket.all()
             if basket_items:
-                OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=basket_items.count())
+                OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=basket_items.count()+1)
                 formset = OrderFormSet()
-                for num, form in enumerate(formset.forms):
-                    form.initial['product'] = basket_items[num].product
-                    form.initial['quantity'] = basket_items[num].quantity
-                    form.initial['price'] = basket_items[num].product.price
-                basket_items.delete()
+                for form, basket_item in zip(formset.forms, basket_items):
+                    form.initial['product'] = basket_item.product
+                    form.initial['quantity'] = basket_item.quantity
+                    form.initial['price'] = basket_item.product.price
+                # basket_items.delete() удалим позже после сохранения
             else:
                 formset = OrderFormSet()
         context['order_items'] = formset
@@ -66,9 +67,10 @@ class OrderCreateView(PageContextMixin, CreateView):
             if order_items.is_valid():
                 order_items.instance = self.object
                 order_items.save()
+                self.request.user.basket.all().delete()
 
-            if self.object.get_total_cost == 0:
-                self.object.delete()
+        if self.object.total_cost == 0:
+            self.object.delete()
 
         return super(OrderCreateView, self).form_valid(form)
 
@@ -102,7 +104,7 @@ class OrderUpdateView(PageContextMixin, UpdateView):
                 order_items.instance = self.object
                 order_items.save()
 
-            if self.object.get_total_cost == 0:
+            if self.object.total_cost == 0:
                 self.object.delete()
 
         return super(OrderUpdateView, self).form_valid(form)

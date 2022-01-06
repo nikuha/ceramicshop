@@ -20,7 +20,7 @@
                     <div>{{ item.product.price|with_currency }} x {{ item.quantity }} шт.</div>
                 </div>
                 <div class="column-middle center">
-                    <div> = {{ item.get_product_cost|with_currency }}</div>
+                    <div> = {{ item.product_cost|with_currency }}</div>
                 </div>
             </div>
         {% endfor %}

@@ -30,14 +30,14 @@
                                 </div>
                             </td>
                             <td>
-                                {% if item.status == 'FM' %}
+                                {% if item.is_forming %}
                                     <div class="a-button green">
                                         <a href="{% url 'ordersapp:update' item.pk %}">Редактировать</a>
                                     </div>
                                 {% endif %}
                             </td>
                             <td>
-                                {% if item.status == 'FM' %}
+                                {% if item.is_forming %}
                                     <div class="a-button red">
                                         <a href="{% url 'ordersapp:delete' item.pk %}">Удалить</a>
                                     </div>

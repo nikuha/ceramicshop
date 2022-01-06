@@ -20,7 +20,7 @@ class Order(models.Model):
         (CANCEL, 'отмена заказа')
     )
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     created = models.DateTimeField(verbose_name='создан', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='обновлен', auto_now=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, verbose_name='статус', max_length=3, default=FORMING)
@@ -30,14 +30,18 @@ class Order(models.Model):
         return f'Текущий заказ {self.pk}'
 
     @property
-    def get_total_quantity(self):
+    def is_forming(self):
+        return self.status == self.FORMING
+
+    @property
+    def total_quantity(self):
         items = self.order_items.select_related('product')
         return sum(list(map(lambda x: x.quantity, items)))
 
     @property
-    def get_total_cost(self):
+    def total_cost(self):
         items = self.order_items.select_related('product')
-        return sum(list(map(lambda x: x.get_product_cost, items)))
+        return sum(list(map(lambda x: x.product_cost, items)))
 
     def get_items(self):
         pass
@@ -56,5 +60,5 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(verbose_name='количество', default=0)
 
     @property
-    def get_product_cost(self):
+    def product_cost(self):
         return self.product.price * self.quantity
