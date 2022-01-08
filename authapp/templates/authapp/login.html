@@ -20,7 +20,10 @@
 
         <p>
             <label></label>
-            <a href="{% url 'social:begin' 'vk-oauth2' %}?next='/'"><img src="{% static 'img/social-vk.png' %}" alt=""></a>
+            <span class="row">
+                <a href="{% url 'social:begin' 'vk-oauth2' %}?next='/'"><img src="{% static 'img/social-vk.png' %}" alt=""></a>
+                <a href="{% url 'social:begin' 'google-oauth2' %}?next='/'"><img src="{% static 'img/social-google.png' %}" alt=""></a>
+            </span>
         </p>
 
     </form>
