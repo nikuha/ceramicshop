@@ -1,0 +1,16 @@
+{% if object.is_forming %}
+    <div class="info-container margin-top">
+        <div class="item">
+            <div class="a-button green">
+                <a href="{% url 'ordersapp:forming_complete' object.pk %}">завершить заказ</a>
+            </div>
+            <div class="a-button red">
+                <a href="{% url 'ordersapp:delete' object.pk %}">Удалить</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="margin-top center">
+    <a href="{% url 'mainapp:index' %}">на главную</a> /
+    <a href="{% url 'ordersapp:list' %}">к списку заказов</a>
+</div>

@@ -1,0 +1,23 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="basket-container">
+       {% include 'ordersapp/includes/inc_order_summary.html' %}
+        <div class="big-title center margin-top">Уверены, что хотите удалить заказ?</div>
+        <div class="info-container margin-top">
+            <div class="item">
+                <div>
+                   <form action="{% url 'ordersapp:delete' object.pk %}" method="post">
+                       {% csrf_token %}
+                       <button class="standard red" type="submit">удалить</button>
+                   </form>
+                </div>
+                <div>
+                    <button class="standard green"
+                            onclick="document.location='{% url 'ordersapp:list' %}'">отмена</button>
+                </div>
+            </div>
+        </div>
+   </div>
+{% endblock %}

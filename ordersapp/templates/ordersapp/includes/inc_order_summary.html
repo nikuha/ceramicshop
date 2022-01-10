@@ -1,0 +1,32 @@
+{% load my_tags %}
+{% if object %}
+    <div class="big-title center">Заказ №{{ object.pk }} от {{ object.created|date:"d.m.Y H:i" }}</div>
+    <div class="info-container">
+        <div class="item"><div>заказчик:</div><div>{{ user.full_or_user_name }}</div></div>
+        <div class="item"><div>обновлен:</div><div>{{ object.updated|date:"Y-m-d H:i:s" }}</div></div>
+        <div class="item"><div>cтатус:</div><div>{{ object.get_status_display }}</div></div>
+        <div class="item">
+            <div>общее количество товаров:</div>
+            <div><span class="order_total_quantity">{{ object.total_quantity }}</span></div>
+        </div>
+        <div class="item">
+            <div>общая стоимость:</div>
+            <div><span class="order_total_cost">{{ object.total_cost|with_currency }}</span></div>
+        </div>
+    </div>
+{% else %}
+    <div class="big-title center">Новый заказ</div>
+    <div class="info-container">
+        <div class="item"><div>заказчик:</div><div>{{ user.full_or_user_name }}</div></div>
+       {% if basket.0 %}
+        <div class="item">
+            <div>общее количество товаров:</div>
+            <div><span class="order_total_quantity">{{ basket.0.total_quantity }}</span></div>
+        </div>
+        <div class="item">
+            <div>общая стоимость:</div>
+            <div><span class="order_total_cost">{{ basket.0.total_cost|with_currency }}</span></div>
+        </div>
+       {% endif %}
+    </div>
+{% endif %}

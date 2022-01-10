@@ -16,7 +16,7 @@
                      onclick="document.location='{{ item.product.url }}'"></div>
                 <div class="description-container pointer column-middle"
                      onclick="document.location='{{ item.product.url }}'">
-                    <div class="title">{{ item.product.name|title }}</div>
+                    <div class="title">{{ item.product.name|capfirst }}</div>
                     <div class="description">{{ item.product.description }}</div>
                 </div>
                 <div class="quantity-container">

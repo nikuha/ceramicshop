@@ -48,6 +48,14 @@ class User(AbstractUser):
     def image_or_default(self):
         return self.avatar.url if self.avatar else static('img/default.png')
 
+    @property
+    def first_or_user_name(self):
+        return self.first_name if self.first_name else self.username
+
+    @property
+    def full_or_user_name(self):
+        return self.first_name + ' ' + self.last_name if self.first_name or self.last_name else self.username
+
 
 class UserProfile(models.Model):
     MALE = 'M'

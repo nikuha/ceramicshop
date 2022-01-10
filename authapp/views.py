@@ -62,7 +62,6 @@ class UserRegisterView(FormView, PageContextMixin):
 
 
 class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
-    model = User
     template_name = 'authapp/edit.html'
     page_title = 'Админка / Редактирование профиля'
     form_class = UserEditForm

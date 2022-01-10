@@ -1,0 +1,30 @@
+
+{% extends "mainapp/base.html" %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+    <div class="basket-container">
+        {% include 'ordersapp/includes/inc_order_summary.html' %}
+        {% for item in object.order_items.select_related %}
+            <div class="item-container">
+                <div class="image-container pointer"
+                     style="background-image: url('{{ item.product.image_or_default }}')"
+                     onclick="document.location='{{ item.product.url }}'"></div>
+                <div class="description-container pointer column-middle"
+                     onclick="document.location='{{ item.product.url }}'">
+                    <div class="title">{{ item.product.name|capfirst }}</div>
+                    <div class="description">{{ item.product.description }}</div>
+                </div>
+                <div class="column-middle center">
+                    <div>{{ item.product.price|with_currency }} x {{ item.quantity }} шт.</div>
+                </div>
+                <div class="column-middle center">
+                    <div> = {{ item.product_cost|with_currency }}</div>
+                </div>
+            </div>
+        {% endfor %}
+        {% include 'ordersapp/includes/inc_order_actions.html' %}
+    </div>
+
+{% endblock %}

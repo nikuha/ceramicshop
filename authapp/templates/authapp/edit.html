@@ -2,16 +2,16 @@
 
 {% block content %}
     <div class="form-container">
-    <div class="title">Редактирование профиля</div>
-    <form class="base-form margin-center" action="{% url 'authapp:edit' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ profile.as_p }}
-        <p>
-            <label></label>
-            <input class="submit" type="submit" value="Редактировать">
-        </p>
+        <div class="title">Редактирование профиля</div>
+        <form class="base-form margin-center" action="{% url 'authapp:edit' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {{ profile.as_p }}
+            <p>
+                <label></label>
+                <input class="submit" type="submit" value="Редактировать">
+            </p>
 
-    </form>
+        </form>
     </div>
 {% endblock %}

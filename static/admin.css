@@ -48,27 +48,6 @@
     margin-bottom: 10px;
 }
 
-.a-button a {
-    display: block;
-    width: fit-content;
-}
-
-.a-button a, button.standard {
-    padding: 7px 10px;
-    font-size: 14px;
-    text-decoration: none;
-    border-radius: 5px;
-    color: white;
-}
-
 .objects-container .delete-container .a-button a, .objects-container .update-container .a-button a {
     margin: 0 auto;
-}
-
-.a-button.red a, button.standard.red {
-    background-color: #ef9090;
-}
-
-.a-button.green a, button.standard.green {
-    background-color: #95a574;
 }
