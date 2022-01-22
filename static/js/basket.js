@@ -11,20 +11,22 @@ function initBasketQuantity() {
             let container = $(this).closest('.quantity-container'),
                 quantity_div = container.find('.quantity'),
                 pk = quantity_div.attr('data-pk'),
-                max_quantity = quantity_div.attr('data-max'),
+                product_quantity = quantity_div.attr('data-product-quantity'),
                 mode = $(this).closest('div').hasClass('plus') ? 'plus' : 'minus',
                 old_quantity = Number(quantity_div.html()),
                 new_quantity = mode === 'plus' ? old_quantity + 1 : old_quantity - 1;
 
-            if (new_quantity >= 1 && new_quantity <= max_quantity) {
+            if (new_quantity >= 1 && new_quantity - old_quantity <= product_quantity) {
+                quantity_div.html('<img src="/static/img/loading.gif">')
                 $.ajax({
                     type: "GET",
-                    url: '/basket/update_quantity/'+pk,
+                    url: '/basket/update_quantity/'+pk+'/',
                     data: {quantity: new_quantity},
                     cache: false,
 
                     success: function (data) {
                         quantity_div.html(new_quantity);
+                        quantity_div.attr('data-product-quantity', data.product_quantity)
                         $('#product_cost'+pk).html(data.product_cost);
                         $('#basket_total_quantity').html(data.total_quantity);
                         $('#basket_total_cost').html(data.total_cost);

@@ -21,7 +21,9 @@
                 </div>
                 <div class="quantity-container">
                     <div class="minus"><button>-</button></div>
-                    <div class="quantity" data-pk="{{ item.pk }}" data-max="{{ item.product.quantity }}">{{ item.quantity }}</div>
+                    <div class="quantity" data-pk="{{ item.pk }}" data-product-quantity="{{ item.product.quantity }}">
+                        {{ item.quantity }}
+                    </div>
                     <div class="plus"><button>+</button></div>
                 </div>
                 <div class="product-cost column-middle center" id="product_cost{{ item.pk }}">{{ item.product_cost|with_currency }}</div>
