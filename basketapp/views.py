@@ -54,7 +54,7 @@ def update_quantity(request, pk):
     if request.is_ajax():
         basket_record = get_object_or_404(Basket, pk=pk)
         quantity = int(request.GET['quantity'])
-        if quantity > 1 and quantity - basket_record.quantity <= basket_record.product.quantity:
+        if quantity >= 1 and quantity - basket_record.quantity <= basket_record.product.quantity:
             basket_record.quantity = quantity
             basket_record.save()
         return JsonResponse({
