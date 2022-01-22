@@ -3,11 +3,9 @@ from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
-from basketapp.models import Basket
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
 
