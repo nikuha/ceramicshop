@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from mainapp.models import Product
+from django.db.models.signals import pre_delete, pre_save
+from django.dispatch import receiver
 
 
 class Order(models.Model):
@@ -62,3 +64,23 @@ class OrderItem(models.Model):
     @property
     def product_cost(self):
         return self.product.price * self.quantity
+
+    @staticmethod
+    def get_item(pk):
+        return OrderItem.objects.get(pk=pk)
+
+
+@receiver(pre_delete, sender=OrderItem)
+def product_quantity_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
+
+
+@receiver(pre_save, sender=OrderItem)
+def product_quantity_save(sender, instance, **kwargs):
+    if instance.pk:
+        get_item = instance.get_item(int(instance.pk))
+        instance.product.quantity -= instance.quantity - get_item.quantity
+    else:
+        instance.product.quantity -= instance.quantity
+    instance.product.save()

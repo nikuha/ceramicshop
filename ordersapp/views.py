@@ -1,13 +1,13 @@
+from django.conf import settings
 from django.db import transaction
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
-from basketapp.models import Basket
+from mainapp.models import Product
 from ordersapp.forms import OrderItemsForm
 from ordersapp.models import Order, OrderItem
 
@@ -126,3 +126,13 @@ def order_forming_complete(request, pk):
     order.status = Order.SEND_TO_PROCEED
     order.save()
     return HttpResponseRedirect(reverse('ordersapp:list'))
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        item = get_object_or_404(Product, pk=pk)
+        return JsonResponse({
+            'price': str(round(item.price))
+        })
+    else:
+        return JsonResponse({'error': 'Что-то пошло не так'})

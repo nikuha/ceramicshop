@@ -54,14 +54,14 @@ def update_quantity(request, pk):
     if request.is_ajax():
         basket_record = get_object_or_404(Basket, pk=pk)
         quantity = int(request.GET['quantity'])
-        if quantity <= basket_record.product.quantity:
+        if quantity >= 1 and quantity - basket_record.quantity <= basket_record.product.quantity:
             basket_record.quantity = quantity
             basket_record.save()
-        # result = render_to_string('basketapp/includes/inc_basket_list.html', content)
         return JsonResponse({
             'product_cost': str(round(basket_record.product_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
             'total_quantity': basket_record.total_quantity,
-            'total_cost': str(round(basket_record.total_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL
+            'total_cost': str(round(basket_record.total_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
+            'product_quantity': basket_record.product.quantity
         })
     else:
         return JsonResponse({'error': 'Что-то пошло не так'})
