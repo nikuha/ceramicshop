@@ -1,0 +1,43 @@
+    1  ssh-copy-id nika@89.108.81.106
+    2  ssh-keygen
+    3  cat /root/.ssh/id_rsa.pub
+    4  apt update
+    5  apt install nginx
+    6  apt install postgresql postgresql-contrib
+    7  nano /etc/postgresql/12/main/pg_hba.conf
+    8  systemctl restart postgresql
+    9  apt install git-core
+   10  useradd -g www-data -m django
+   11  cd /home/django
+   12  git clone git@github.com:nikuha/ceramicshop.git
+   13  python3 -m venv env
+   14  apt install python3-venv
+   15  python3 -m venv env
+   16  source env/bin/activate
+   17  cd ceramicshop
+   18  nano .env
+   19  pip3 install -r requirements.txt
+   20  git branch
+   21  git checkout lesson2.5
+   22  git branch
+   23  git pull
+   24  pip3 install gunicorn
+   25  psql -U postgres
+   26  python3 manage.py migrate
+   27  pip3 install psycopg2-binary==2.9.2
+   28  python3 manage.py migrate
+   29  python3 manage.py fill_db
+   30  nano /etc/systemd/system/gunicorn.service
+   31  chown -R django /home/django
+   32  systemctl enable gunicorn
+   33  systemctl start gunicorn
+   34  systemctl status gunicorn
+   35  nano /etc/nginx/sites-available/ceramicshop
+   36  ln -s /etc/nginx/sites-available/ceramicshop /etc/nginx/sites-enabled
+   37  rm /etc/nginx/sites-enabled/default
+   38  systemctl restart gunicorn
+   39  nginx -t
+   40  systemctl restart nginx 
+   41  systemctl status nginx 
+   42  ls
+   43  history > /tmp/history.txt
