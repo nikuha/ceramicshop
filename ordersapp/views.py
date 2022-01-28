@@ -51,7 +51,7 @@ class OrderCreateView(PageContextMixin, CreateView):
                     form.initial['product'] = basket_item.product
                     form.initial['quantity'] = basket_item.quantity
                     form.initial['price'] = basket_item.product.price
-                # basket_items.delete() удалим позже после сохранения
+                basket_items.delete()
             else:
                 formset = OrderFormSet()
         context['order_items'] = formset
@@ -65,9 +65,9 @@ class OrderCreateView(PageContextMixin, CreateView):
             form.instance.user = self.request.user
             self.object = form.save()
             if order_items.is_valid():
+                self.request.user.basket.all().delete()
                 order_items.instance = self.object
                 order_items.save()
-                self.request.user.basket.all().delete()
 
         if self.object.total_cost == 0:
             self.object.delete()
