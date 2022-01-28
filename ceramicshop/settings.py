@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'ceramicshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if os.getenv('DJANGO_DEVELOPMENT') == 'True':
+if os.getenv('DJANGO_DATABASE') == 'postgresql':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
