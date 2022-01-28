@@ -41,3 +41,29 @@
    41  systemctl status nginx 
    42  ls
    43  history > /tmp/history.txt
+   44  cd /home/django
+   45  ls
+   46  git branch
+   47  cd ceramicshop
+   48  git branch
+   49  git pull
+   50  systemctl restart gunicorn
+   51  systemctl restart nginx
+   52  systemctl daemon-reload
+   53  systemctl restart gunicorn
+   54  systemctl restart nginx
+   55  git pull
+   56  ls /etc/nginx/sites-available
+   57  ls /etc/nginx/sites-enabled
+   58  nano /etc/nginx/sites-available/ceramicshop
+   59  systemctl reload nginx
+   60  nginx -t
+   61  ufw status
+   62  ufw allow 'Nginx Full'
+   63  ufw delete allow 'Nginx HTTP'
+   64  ufw status
+   65  ufw enable
+   66  ufw status
+   67  certbot --nginx -d ceramic.nikuha.ru
+   68  history > /tmp/history.txt
+
