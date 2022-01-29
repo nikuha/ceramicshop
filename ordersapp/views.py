@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
 from mainapp.models import Product
-from ordersapp.forms import OrderItemsForm
+from ordersapp.forms import OrderItemForm
 from ordersapp.models import Order, OrderItem
 
 
@@ -39,13 +39,13 @@ class OrderCreateView(PageContextMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(OrderCreateView, self).get_context_data(**kwargs)
 
-        OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=1)
+        OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=1)
         if self.request.POST:
             formset = OrderFormSet(self.request.POST)
         else:
             basket_items = self.request.user.basket.all()
             if basket_items:
-                OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=basket_items.count()+1)
+                OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=basket_items.count() + 1)
                 formset = OrderFormSet()
                 for form, basket_item in zip(formset.forms, basket_items):
                     form.initial['product'] = basket_item.product
@@ -82,7 +82,7 @@ class OrderUpdateView(PageContextMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderUpdateView, self).get_context_data(**kwargs)
-        OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemsForm, extra=1)
+        OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=1)
         if self.request.POST:
             formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
