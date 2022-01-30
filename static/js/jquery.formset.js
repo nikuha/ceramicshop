@@ -17,7 +17,7 @@
             totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS'),
             maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS'),
             minForms = $('#id_' + options.prefix + '-MIN_NUM_FORMS'),
-            childElementSelector = 'input,select,textarea,label,div',
+            childElementSelector = 'input,select,textarea,label,div,span',
             $$ = $(this),
 
             applyExtraClasses = function(row, ndx) {

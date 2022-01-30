@@ -15,7 +15,7 @@ window.onload = function () {
 
     for (let i = 0; i < total_forms; i++) {
         quantity = parseInt($('input[name=order_items-' + i + '-quantity]').val());
-        price = parseInt($('.order_items-' + i + '-price').text());
+        price = parseInt($('#order_items-' + i + '-price').text());
 
         quantity_arr[i] = quantity;
         if (price) {
@@ -67,12 +67,10 @@ window.onload = function () {
 
                     let new_quantity = 1;
                     price_arr[order_item_num] = Number(data.price);
-                    quantity_input.val(new_quantity);
+                    quantity_input.val(new_quantity).attr('max', data.quantity);
                     quantity_arr[order_item_num] = new_quantity;
-                    $('.order_items-' + order_item_num + '-price').html(data.price + '&nbsp;&#8381;');
+                    $('#order_items-' + order_item_num + '-price').html(data.price + '&nbsp;&#8381;');
                     orderSummaryUpdate(price_arr[order_item_num], new_quantity);
-                    // console.log(price_arr)
-                    // console.log(quantity_arr)
                 },
                 error: function (jqXHR) {
                     console.log('Что-то пошло не так!');
@@ -80,8 +78,8 @@ window.onload = function () {
             });
         } else {
             if(old_quantity > 0) orderSummaryUpdate(price_arr[order_item_num], -old_quantity);
-            quantity_input.val('0');
-            $('.order_items-' + order_item_num + '-price').html('');
+            quantity_input.val('0').attr('max', 1);
+            $('#order_items-' + order_item_num + '-price').html('');
             price_arr[order_item_num] = 0
             quantity_arr[order_item_num] = 0
         }
