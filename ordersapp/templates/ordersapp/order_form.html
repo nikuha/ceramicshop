@@ -40,7 +40,7 @@
 
                                 {% if field.name == 'price' %}
 
-                                        <span class="order_items-{{ forloop.parentloop.counter0 }}-price">
+                                        <span id="order_items-{{ forloop.parentloop.counter0 }}-price">
                                             {% if field.value %}{{ field.value|with_currency }}{% endif %}
                                         </span>
 

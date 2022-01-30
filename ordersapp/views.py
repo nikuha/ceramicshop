@@ -51,6 +51,10 @@ class OrderCreateView(PageContextMixin, CreateView):
                     form.initial['product'] = basket_item.product
                     form.initial['quantity'] = basket_item.quantity
                     form.initial['price'] = basket_item.product.price
+                    for field_name, field in form.fields.items():
+                        if field_name == 'quantity':
+                            field.widget.attrs['min'] = 1
+                            field.widget.attrs['max'] = basket_item.quantity + basket_item.product.quantity
                 # basket_items.delete() удалям ниже
             else:
                 formset = OrderFormSet()
@@ -90,6 +94,10 @@ class OrderUpdateView(PageContextMixin, UpdateView):
             for form in formset:
                 if form.instance.pk:
                     form.initial['price'] = form.instance.product.price
+                    for field_name, field in form.fields.items():
+                        if field_name == 'quantity':
+                            field.widget.attrs['min'] = 1
+                            field.widget.attrs['max'] = form.instance.quantity + form.instance.product.quantity
         context['order_items'] = formset
         return context
 
