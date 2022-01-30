@@ -53,7 +53,7 @@ class OrderCreateView(PageContextMixin, CreateView):
                     form.initial['price'] = basket_item.product.price
                     for field_name, field in form.fields.items():
                         if field_name == 'quantity':
-                            field.widget.attrs['min'] = 1
+                            field.widget.attrs['min'] = 0
                             field.widget.attrs['max'] = basket_item.quantity + basket_item.product.quantity
                 # basket_items.delete() удалям ниже
             else:
