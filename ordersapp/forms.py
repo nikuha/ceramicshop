@@ -20,7 +20,8 @@ class OrderItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(OrderItemForm, self).__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.get_items()
+        # self.fields['product'].queryset = Product.get_items()
+        self.fields['product'].queryset = self.instance.get_products
 
     class Meta:
         model = OrderItem

@@ -1,11 +1,18 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.conf import settings
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from basketapp.models import Basket
+
+
+class UserOnlyMixin:
+    @method_decorator(user_passes_test(lambda x: x.is_authenticated))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class PageContextMixin:
@@ -17,7 +24,7 @@ class PageContextMixin:
         return context
 
 
-class BasketView(PageContextMixin, TemplateView):
+class BasketView(UserOnlyMixin, PageContextMixin, TemplateView):
     template_name = 'basketapp/basket.html'
     page_title = 'Корзина'
 

@@ -26,15 +26,6 @@ class Basket(models.Model):
         return self.product.price * self.quantity
 
     @property
-    def total_quantity(self):
-        # return sum([x.quantity for x in self.user.basket.all()])
-        return sum(self.user.basket.values_list('quantity', flat=True))
-
-    @property
-    def total_cost(self):
-        return sum([x.product_cost for x in self.user.basket.all()])
-
-    @property
     def remove_from_basket_url(self):
         return reverse('basketapp:remove', kwargs={'pk': self.id})
 

@@ -11,7 +11,7 @@ def main_path(request):
 def basket(request):
     baskets_list = []
     if request.user.is_authenticated:
-        baskets_list = request.user.basket.order_by('product__category').all()
+        baskets_list = request.user.basket.select_related('product').order_by('product__category').all()
     return {
         'basket': baskets_list
     }
