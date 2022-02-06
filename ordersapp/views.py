@@ -1,15 +1,23 @@
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.db import transaction
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 
 from mainapp.models import Product
 from ordersapp.forms import OrderItemForm
 from ordersapp.models import Order, OrderItem
+
+
+class UserOnlyMixin:
+    @method_decorator(user_passes_test(lambda x: x.is_authenticated))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class PageContextMixin:
@@ -21,7 +29,7 @@ class PageContextMixin:
         return context
 
 
-class OrderListView(PageContextMixin, ListView):
+class OrderListView(UserOnlyMixin, PageContextMixin, ListView):
     model = Order
     page_title = 'Список заказов'
 
@@ -30,7 +38,7 @@ class OrderListView(PageContextMixin, ListView):
         return self.request.user.orders.filter(is_active=True)
 
 
-class OrderCreateView(PageContextMixin, CreateView):
+class OrderCreateView(UserOnlyMixin, PageContextMixin, CreateView):
     model = Order
     fields = []
     success_url = reverse_lazy('ordersapp:list')
@@ -78,7 +86,7 @@ class OrderCreateView(PageContextMixin, CreateView):
         return super(OrderCreateView, self).form_valid(form)
 
 
-class OrderUpdateView(PageContextMixin, UpdateView):
+class OrderUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
     model = Order
     fields = []
     success_url = reverse_lazy('ordersapp:list')
@@ -116,17 +124,18 @@ class OrderUpdateView(PageContextMixin, UpdateView):
         return super(OrderUpdateView, self).form_valid(form)
 
 
-class OrderDeleteView(PageContextMixin, DeleteView):
+class OrderDeleteView(UserOnlyMixin, PageContextMixin, DeleteView):
     model = Order
     success_url = reverse_lazy('ordersapp:list')
     page_title = 'Удаление заказа'
 
 
-class OrderDetailView(PageContextMixin, DetailView):
+class OrderDetailView(UserOnlyMixin, PageContextMixin, DetailView):
     model = Order
     page_title = 'Просмотр заказа'
 
 
+@login_required
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
     order.status = Order.SEND_TO_PROCEED
@@ -134,6 +143,7 @@ def order_forming_complete(request, pk):
     return HttpResponseRedirect(reverse('ordersapp:list'))
 
 
+@login_required
 def get_product_price(request, pk):
     if request.is_ajax():
         item = get_object_or_404(Product, pk=pk)
