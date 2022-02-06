@@ -6,3 +6,5 @@ requests
 psycopg2-binary
 django-debug-toolbar
 django-debug-toolbar-template-profiler
+django-extensions
+pydotplus
