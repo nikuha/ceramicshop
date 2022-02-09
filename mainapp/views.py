@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core import cache
+from django.core.cache import cache
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
 
