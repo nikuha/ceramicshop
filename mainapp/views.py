@@ -1,7 +1,29 @@
+from django.conf import settings
+from django.core import cache
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
 
 from mainapp.models import ProductCategory, Product, Contact
+
+
+def get_products(category_pk=''):
+    if category_pk:
+        queryset = Product.objects.filter(is_active=True, category_id=category_pk)
+    else:
+        queryset = Product.objects.filter(is_active=True, category__is_active=True)
+    return queryset.order_by('pk')
+
+
+def get_cached_products(category_pk=''):
+    if settings.LOW_CACHE:
+        key = f'products{category_pk}'
+        products = cache.get(key)
+        if products is None:
+            products = get_products(category_pk)
+            cache.set(key, products)
+        return products
+    else:
+        return get_products(category_pk)
 
 
 class PageContextMixin:
@@ -50,11 +72,10 @@ class ProductsView(PageContextMixin, ListView):
         qs = super().get_queryset()
         pk = self.kwargs['pk']
         if pk:
-            category = get_object_or_404(ProductCategory, id=pk, is_active=True)
-            qs = qs.filter(is_active=True, category=category).order_by('pk')
+            qs = get_cached_products(pk)
             self.category_id = pk
         else:
-            qs = qs.filter(is_active=True).order_by('-pk').all()
+            qs = get_cached_products()
         return qs
 
 
