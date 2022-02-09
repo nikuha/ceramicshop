@@ -1,5 +1,6 @@
-# для удобного получения полного пути, где мы находимся и формирования класса active для ссылок
 from mainapp.models import ProductCategory
+from django.conf import settings
+from django.core.cache import cache
 
 
 def main_path(request):
@@ -18,7 +19,14 @@ def basket(request):
 
 
 def sorted_categories(request):
-    categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
+    if settings.LOW_CACHE:
+        key = 'categories'
+        categories = cache.get(key)
+        if categories is None:
+            categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
+            cache.set(key, categories)
+    else:
+        categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
     return {
         'sorted_categories': categories
     }
