@@ -1,17 +1,33 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
-
 from mainapp.models import ProductCategory, Product, Contact
+from django.conf import settings
+from django.core.cache import cache
+
+
+def sorted_categories():
+    if settings.LOW_CACHE:
+        key = 'categories'
+        categories = cache.get(key)
+        if categories is None:
+            categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
+            cache.set(key, categories)
+    else:
+        categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
+    return categories
 
 
 class PageContextMixin:
     page_title = ''
     category_id = 0
+    show_categories = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.page_title
         context['category_id'] = self.category_id
+        if self.show_categories:
+            context['sorted_categories'] = sorted_categories()
         return context
 
 
@@ -77,6 +93,7 @@ class ContactsView(PageContextMixin, ListView):
     model = Contact
     template_name = 'mainapp/contacts.html'
     page_title = 'контакты'
+    show_categories = False
 
     def get_queryset(self, **kwargs):
         return super().get_queryset().filter(is_active=True).order_by('pk')
