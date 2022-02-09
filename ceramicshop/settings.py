@@ -23,7 +23,7 @@ SECRET_KEY = 'django-insecure-%kx*c$@stl@pazh)547278gxuiq&qv8)8h+$w87m)g2vfkuh1*
 load_dotenv(BASE_DIR / '.env')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'basketapp',
     'adminapp',
     'ordersapp',
-    'social_django'
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -53,8 +53,36 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'social_django.middleware.SocialAuthExceptionMiddleware'
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
+if DEBUG:
+    INSTALLED_APPS.extend([
+        'debug_toolbar',
+        'template_profiler_panel',
+        'django_extensions',
+    ])
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+
+    DEBUG_TOOLBAR_CONFIG = {
+       'SHOW_TOOLBAR_CALLBACK': lambda x: True,
+    }
+
+    DEBUG_TOOLBAR_PANELS = [
+       'debug_toolbar.panels.versions.VersionsPanel',
+       'debug_toolbar.panels.timer.TimerPanel',
+       'debug_toolbar.panels.settings.SettingsPanel',
+       'debug_toolbar.panels.headers.HeadersPanel',
+       'debug_toolbar.panels.request.RequestPanel',
+       'debug_toolbar.panels.sql.SQLPanel',
+       'debug_toolbar.panels.templates.TemplatesPanel',
+       'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+       'debug_toolbar.panels.cache.CachePanel',
+       'debug_toolbar.panels.signals.SignalsPanel',
+       'debug_toolbar.panels.logging.LoggingPanel',
+       'debug_toolbar.panels.redirects.RedirectsPanel',
+       'debug_toolbar.panels.profiling.ProfilingPanel',
+       'template_profiler_panel.panels.template.TemplateProfilerPanel',
+    ]
 
 ROOT_URLCONF = 'ceramicshop.urls'
 
@@ -138,7 +166,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )

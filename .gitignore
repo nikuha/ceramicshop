@@ -3,3 +3,5 @@
 db.sqlite3
 loadjson.txt
 production
+static/admin
+static/debug_toolbar

@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+
 from mainapp.models import Product
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
@@ -45,8 +46,9 @@ class Order(models.Model):
         items = self.order_items.select_related('product')
         return sum(list(map(lambda x: x.product_cost, items)))
 
+    @property
     def get_items(self):
-        pass
+        return self.order_items.select_related('product')
 
     def delete(self, using=None, keep_parents=False):
         for item in self.order_items.select_related('product'):
@@ -68,6 +70,11 @@ class OrderItem(models.Model):
     @staticmethod
     def get_item(pk):
         return OrderItem.objects.get(pk=pk)
+
+    @property
+    def get_products(self):
+        return Product.objects.filter(is_active=True, category__is_active=True)\
+            .select_related('category').order_by('category', 'name')
 
 
 @receiver(pre_delete, sender=OrderItem)

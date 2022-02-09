@@ -20,8 +20,8 @@
                 <div class="menu-link">|</div>
                 <div class="menu-link">
                     <a href="{% url 'basketapp:view' %}" class="basket">
-                        <span id="top_total_quantity">{{ basket.0.total_quantity }}</span> шт.
-                        <span id="top_total_cost">{{ basket.0.total_cost|with_currency }}</span>
+                        <span id="top_total_quantity">{{ basket|get_total_quantity }}</span> шт.
+                        <span id="top_total_cost">{{ basket|get_total_cost|with_currency }}</span>
                     </a>
                 </div>
             {% endif %}

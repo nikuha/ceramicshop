@@ -7,11 +7,11 @@
         <div class="item"><div>cтатус:</div><div>{{ object.get_status_display }}</div></div>
         <div class="item">
             <div>общее количество товаров:</div>
-            <div><span class="order_total_quantity">{{ object.total_quantity }}</span></div>
+            <div><span class="order_total_quantity">{{ object.get_items|get_total_quantity }}</span></div>
         </div>
         <div class="item">
             <div>общая стоимость:</div>
-            <div><span class="order_total_cost">{{ object.total_cost|with_currency }}</span></div>
+            <div><span class="order_total_cost">{{ object.get_items|get_total_cost|with_currency }}</span></div>
         </div>
     </div>
 {% else %}

@@ -13,3 +13,13 @@ def email_link(email):
 @register.filter()
 def with_currency(price):
     return mark_safe(f'{round(price)}&nbsp;{settings.CURRENCY_SYMBOL}') if price else ''
+
+
+@register.filter()
+def get_total_quantity(items):
+    return sum([x.quantity for x in items])
+
+
+@register.filter()
+def get_total_cost(items):
+    return sum([x.product_cost for x in items])
