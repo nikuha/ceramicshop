@@ -5,14 +5,16 @@
         <div class="item"><div>заказчик:</div><div>{{ user.full_or_user_name }}</div></div>
         <div class="item"><div>обновлен:</div><div>{{ object.updated|date:"Y-m-d H:i:s" }}</div></div>
         <div class="item"><div>cтатус:</div><div>{{ object.get_status_display }}</div></div>
-        <div class="item">
-            <div>общее количество товаров:</div>
-            <div><span class="order_total_quantity">{{ object.get_items|get_total_quantity }}</span></div>
-        </div>
-        <div class="item">
-            <div>общая стоимость:</div>
-            <div><span class="order_total_cost">{{ object.get_items|get_total_cost|with_currency }}</span></div>
-        </div>
+        {% with total=object.total %}
+            <div class="item">
+                <div>общее количество товаров:</div>
+                <div><span class="order_total_quantity">{{ total.quantity }}</span></div>
+            </div>
+            <div class="item">
+                <div>общая стоимость:</div>
+                <div><span class="order_total_cost">{{ total.cost|with_currency }}</span></div>
+            </div>
+        {% endwith %}
     </div>
 {% else %}
     <div class="big-title center">Новый заказ</div>
