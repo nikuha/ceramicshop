@@ -1,23 +1,47 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView
-
 from mainapp.models import ProductCategory, Product, Contact
+from django.conf import settings
+from django.core.cache import cache
+
+
+def get_categories(params):
+    return ProductCategory.objects.filter(is_active=True).order_by('pk')
+
+
+def get_category_products(params):
+    return Product.objects.filter(is_active=True, category_id=params).order_by('pk')
+
+
+def get_cached_queryset(key, get_function, params=None):
+    if settings.LOW_CACHE:
+        categories = cache.get(key)
+        if categories is None:
+            categories = get_function(params)
+            cache.set(key, categories)
+    else:
+        categories = get_function(params)
+    return categories
 
 
 class PageContextMixin:
     page_title = ''
     category_id = 0
+    show_categories = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = self.page_title
         context['category_id'] = self.category_id
+        if self.show_categories:
+            context['sorted_categories'] = get_cached_queryset('categories', get_categories)
         return context
 
 
 class IndexView(PageContextMixin, TemplateView):
     template_name = 'mainapp/index.html'
     page_title = 'Главная'
+    show_categories = False
 
 
 class HotProductsView(PageContextMixin, ListView):
@@ -40,22 +64,25 @@ class HotProductsView(PageContextMixin, ListView):
         return products
 
 
-class ProductsView(PageContextMixin, ListView):
+class AllProductsView(PageContextMixin, ListView):
     model = Product
     template_name = 'mainapp/products.html'
     page_title = 'посуда'
     paginate_by = 6
 
     def get_queryset(self, **kwargs):
-        qs = super().get_queryset()
+        return super().get_queryset().filter(is_active=True, category__is_active=True).order_by('-pk')
+
+
+class ProductsView(PageContextMixin, ListView):
+    model = Product
+    template_name = 'mainapp/products.html'
+    page_title = 'посуда'
+
+    def get_queryset(self, **kwargs):
         pk = self.kwargs['pk']
-        if pk:
-            category = get_object_or_404(ProductCategory, id=pk, is_active=True)
-            qs = qs.filter(is_active=True, category=category).order_by('pk')
-            self.category_id = pk
-        else:
-            qs = qs.filter(is_active=True).order_by('-pk').all()
-        return qs
+        self.category_id = pk
+        return get_cached_queryset(f'products{pk}', get_category_products, pk)
 
 
 class ProductView(DetailView):
@@ -77,6 +104,7 @@ class ContactsView(PageContextMixin, ListView):
     model = Contact
     template_name = 'mainapp/contacts.html'
     page_title = 'контакты'
+    show_categories = False
 
     def get_queryset(self, **kwargs):
         return super().get_queryset().filter(is_active=True).order_by('pk')

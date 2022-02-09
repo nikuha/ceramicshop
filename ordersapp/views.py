@@ -48,13 +48,14 @@ class OrderCreateView(UserOnlyMixin, PageContextMixin, CreateView):
         context = super(OrderCreateView, self).get_context_data(**kwargs)
 
         OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=1)
+        queryset = self.object.order_items.select_related('product')
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST)
+            formset = OrderFormSet(self.request.POST, queryset=queryset)
         else:
             basket_items = self.request.user.basket.all()
             if basket_items:
                 OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=basket_items.count() + 1)
-                formset = OrderFormSet()
+                formset = OrderFormSet(queryset=queryset)
                 for form, basket_item in zip(formset.forms, basket_items):
                     form.initial['product'] = basket_item.product
                     form.initial['quantity'] = basket_item.quantity
@@ -63,7 +64,6 @@ class OrderCreateView(UserOnlyMixin, PageContextMixin, CreateView):
                         if field_name == 'quantity':
                             field.widget.attrs['min'] = 0
                             field.widget.attrs['max'] = basket_item.quantity + basket_item.product.quantity
-                # basket_items.delete() удалям ниже
             else:
                 formset = OrderFormSet()
         context['order_items'] = formset

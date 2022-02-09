@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 if DEBUG:
     INSTALLED_APPS.extend([
@@ -101,7 +103,6 @@ TEMPLATES = [
 
                 'mainapp.context_processors.basket',
                 'mainapp.context_processors.main_path',
-                'mainapp.context_processors.sorted_categories',
 
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect'
@@ -227,3 +228,19 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
 )
+
+
+LOW_CACHE = os.getenv('LOW_CACHE') == 'True'
+
+if LOW_CACHE:
+    CACHE_LOCATION = os.getenv('CACHE_LOCATION', '127.0.0.1:11211')
+    CACHE_MIDDLEWARE_ALIAS = 'default'
+    CACHE_MIDDLEWARE_SECONDS = 120
+    CACHE_MIDDLEWARE_KEY_PREFIX = 'ceramicshop'
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': CACHE_LOCATION,
+        }
+    }

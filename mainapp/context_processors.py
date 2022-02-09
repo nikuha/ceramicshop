@@ -17,8 +17,8 @@ def basket(request):
     }
 
 
-def sorted_categories(request):
-    categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
-    return {
-        'sorted_categories': categories
-    }
+# def sorted_categories(request):
+#     categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
+#     return {
+#         'sorted_categories': categories
+#     }

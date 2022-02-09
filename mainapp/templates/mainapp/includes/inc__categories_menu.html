@@ -1,7 +1,7 @@
 
     <div class="products-menu">
         <div class="inner-container">
-            <div class="item {% if category_id == 0 %}active{% endif %}" onclick="document.location='{% url 'mainapp:products:category' 0 %}'">Все</div>
+            <div class="item {% if category_id == 0 %}active{% endif %}" onclick="document.location='{% url 'mainapp:products:all' %}'">Все</div>
             {% for category in sorted_categories %}
                 <div class="item {% if category_id == category.id  %}active{% endif %}" onclick="document.location='{{ category.url }}'">{{ category.name }}</div>
             {% endfor %}

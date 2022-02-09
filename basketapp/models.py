@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 
 from authapp.models import User
 from django.conf import settings
@@ -21,7 +22,7 @@ class Basket(models.Model):
     quantity = models.SmallIntegerField(verbose_name='количество', default=0)
     add_datetime = models.DateTimeField(verbose_name='время', auto_now_add=True)
 
-    @property
+    @cached_property
     def product_cost(self):
         return self.product.price * self.quantity
 
