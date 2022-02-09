@@ -40,9 +40,9 @@ class Product(models.Model):
     def add_to_basket_url(self):
         return reverse('basketapp:add', kwargs={'pk': self.id})
 
-    @staticmethod
-    def get_items():
-        return Product.objects.filter(is_active=True, category__is_active=True).order_by('category', 'name')
+    @classmethod
+    def get_items(cls):
+        return cls.objects.filter(is_active=True, category__is_active=True).order_by('category', 'name')
 
 
 class Contact(models.Model):
