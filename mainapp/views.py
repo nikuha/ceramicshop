@@ -85,12 +85,12 @@ class ProductsView(PageContextMixin, ListView):
         return get_cached_queryset(f'products{pk}', get_category_products, pk)
 
 
-class ProductView(DetailView):
+class ProductView(PageContextMixin, DetailView):
     model = Product
     template_name = 'mainapp/product.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(ProductView, self).get_context_data(**kwargs)
         cur_object = self.get_object()
         context['page_title'] = cur_object.name
         context['category_id'] = cur_object.category_id

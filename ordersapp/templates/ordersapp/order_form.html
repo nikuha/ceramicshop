@@ -45,10 +45,6 @@
                                             {% if field.value %}{{ field.value|with_currency }}{% endif %}
                                         </span>
 
-                                {% elif field.name == 'product' %}
-                                    {% cache 3600 order_items_form_product field.value %}
-                                        {{ field }}
-                                    {% endcache %}
                                 {% else %}
                                     {{ field }}
                                 {% endif %}

@@ -80,7 +80,7 @@ class OrderCreateView(UserOnlyMixin, PageContextMixin, CreateView):
             if order_items.is_valid():
                 order_items.instance = order
                 order_items.save()
-            if order.total_cost == 0:
+            if order.total['cost'] == 0:
                 order.delete()
 
         return super(OrderCreateView, self).form_valid(form)
@@ -119,7 +119,7 @@ class OrderUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
             if order_items.is_valid():
                 order_items.instance = order
                 order_items.save()
-            if order.total_cost == 0:
+            if order.total['cost'] == 0:
                 order.delete()
 
         return super(OrderUpdateView, self).form_valid(form)

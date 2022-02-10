@@ -31,7 +31,7 @@ class User(AbstractUser):
         verify_link = reverse('authapp:verify', args=[self.email, self.activation_key])
         subject = f'Для активации учетной записи {self.username} пройдите по ссылке'
         message = f'Для подтверждения учетной записи {self.username} на портале \n {settings.DOMAIN_NAME}{verify_link}'
-        self.email_user(subject, message, settings.EMAIL_HOST_USER, fail_silently=False)
+        self.email_user(subject, message, settings.EMAIL_FROM_ADDRESS, fail_silently=False)
         return True
 
     def check_activation_key(self, activate_key):
