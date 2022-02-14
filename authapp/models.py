@@ -10,6 +10,7 @@ from django.templatetags.static import static
 from datetime import timedelta
 
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.timezone import now
 
 
@@ -55,6 +56,18 @@ class User(AbstractUser):
     @property
     def full_or_user_name(self):
         return self.first_name + ' ' + self.last_name if self.first_name or self.last_name else self.username
+
+    @cached_property
+    def basket_items(self):
+        return self.basket.select_related('product').order_by('product__category').all()
+
+    @property
+    def basket_total_quantity(self):
+        return sum([x.quantity for x in self.basket_items])
+
+    @property
+    def basket_total_cost(self):
+        return sum([x.product_cost for x in self.basket_items])
 
 
 class UserProfile(models.Model):

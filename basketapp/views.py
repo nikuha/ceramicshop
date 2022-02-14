@@ -66,8 +66,8 @@ def update_quantity(request, pk):
             basket_record.save()
         return JsonResponse({
             'product_cost': str(round(basket_record.product_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
-            'total_quantity': basket_record.total_quantity,
-            'total_cost': str(round(basket_record.total_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
+            'total_quantity': request.user.basket_total_quantity,
+            'total_cost': str(round(request.user.basket_total_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
             'product_quantity': basket_record.product.quantity
         })
     else:

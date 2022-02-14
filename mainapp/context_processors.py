@@ -11,14 +11,7 @@ def main_path(request):
 def basket(request):
     baskets_list = []
     if request.user.is_authenticated:
-        baskets_list = request.user.basket.select_related('product').order_by('product__category').all()
+        baskets_list = request.user.basket_items
     return {
         'basket': baskets_list
     }
-
-
-# def sorted_categories(request):
-#     categories = ProductCategory.objects.filter(is_active=True).order_by('pk')
-#     return {
-#         'sorted_categories': categories
-#     }
