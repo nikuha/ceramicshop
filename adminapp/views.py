@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -136,6 +137,13 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     page_title = 'Админка / Редактирование категории продуктов'
     success_url = reverse_lazy('adminapp:categories')
     form_class = AdminProductCategoryCreateForm
+
+    def form_valid(self, form):
+        discount = form.cleaned_data['discount']
+        if discount:
+            self.object.product_set.update(price=F('price') * (1 - discount / 100))
+
+        return super().form_valid(form)
 
 
 class CategoryToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
