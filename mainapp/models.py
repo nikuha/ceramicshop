@@ -1,6 +1,9 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 from django.templatetags.static import static
+from django.db import connection
 
 
 class ProductCategory(models.Model):
@@ -14,6 +17,13 @@ class ProductCategory(models.Model):
     @property
     def url(self):
         return reverse('mainapp:products:category', kwargs={'pk': self.id})
+
+
+@receiver(post_save, sender=ProductCategory)
+def save_category(sender, instance, created, **kwargs):
+    instance.product_set.update(is_active=instance.is_active)
+    # for query in filter(lambda x: 'UPDATE' in x['sql'], connection.queries):
+    #     print(query['sql'])
 
 
 class Product(models.Model):

@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import connection
+from django.db.models import F
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -61,9 +63,13 @@ def update_quantity(request, pk):
     if request.is_ajax():
         basket_record = get_object_or_404(Basket, pk=pk)
         quantity = int(request.GET['quantity'])
-        if quantity >= 1 and quantity - basket_record.quantity <= basket_record.product.quantity:
-            basket_record.quantity = quantity
+        quantity_diff = quantity - basket_record.quantity
+        if quantity >= 1 and quantity_diff <= basket_record.product.quantity:
+            # basket_record.quantity = quantity
+            basket_record.quantity = F('quantity') + quantity_diff
             basket_record.save()
+            # print_queries('UPDATE', connection.queries)
+            basket_record.refresh_from_db()
         return JsonResponse({
             'product_cost': str(round(basket_record.product_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
             'total_quantity': request.user.basket_total_quantity,
@@ -72,3 +78,8 @@ def update_quantity(request, pk):
         })
     else:
         return JsonResponse({'error': 'Что-то пошло не так'})
+
+
+def print_queries(q_type, queries):
+    for query in filter(lambda x: q_type in x['sql'], queries):
+        print(query['sql'])
