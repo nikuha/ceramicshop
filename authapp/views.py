@@ -31,6 +31,11 @@ class UserLoginView(LoginView, PageContextMixin):
             return self.request.POST['next']
         return settings.LOGIN_REDIRECT_URL
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('mainapp:index'))
+        return super(LoginView, self).get(request, *args, **kwargs)
+
 
 class UserLogoutView(LogoutView):
     template_name = 'mainapp/index.html'
@@ -59,6 +64,11 @@ class UserRegisterView(FormView, PageContextMixin):
             return render(self, 'authapp/verification.html')
         except Exception as e:
             return HttpResponseRedirect(reverse('mainapp:index'))
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('mainapp:index'))
+        return super(FormView, self).get(request, *args, **kwargs)
 
 
 class ProfileUpdateView(UserOnlyMixin, PageContextMixin, UpdateView):
