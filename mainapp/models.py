@@ -19,11 +19,12 @@ class ProductCategory(models.Model):
         return reverse('mainapp:products:category', kwargs={'pk': self.id})
 
 
-@receiver(post_save, sender=ProductCategory)
-def save_category(sender, instance, created, **kwargs):
-    instance.product_set.update(is_active=instance.is_active)
-    # for query in filter(lambda x: 'UPDATE' in x['sql'], connection.queries):
-    #     print(query['sql'])
+# отключать все товары, если выключена категория
+# @receiver(post_save, sender=ProductCategory)
+# def save_category(sender, instance, created, **kwargs):
+#     instance.product_set.update(is_active=instance.is_active)
+#     # for query in filter(lambda x: 'UPDATE' in x['sql'], connection.queries):
+#     #     print(query['sql'])
 
 
 class Product(models.Model):

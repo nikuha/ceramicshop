@@ -23,11 +23,11 @@
 
         <div class="item">
             <div>общее количество товаров:</div>
-            <div><span class="order_total_quantity">{% if basket.0 %}{{ basket.0.total_quantity }}{% endif %}</span></div>
+            <div><span class="order_total_quantity">{% if basket.0 %}{{ user.basket_total_quantity }}{% endif %}</span></div>
         </div>
         <div class="item">
             <div>общая стоимость:</div>
-            <div><span class="order_total_cost">{% if basket.0 %}{{ basket.0.total_cost|with_currency }}{% endif %}</span></div>
+            <div><span class="order_total_cost">{% if basket.0 %}{{ user.basket_total_cost|with_currency }}{% endif %}</span></div>
         </div>
 
     </div>

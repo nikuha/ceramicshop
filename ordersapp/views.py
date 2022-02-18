@@ -48,14 +48,13 @@ class OrderCreateView(UserOnlyMixin, PageContextMixin, CreateView):
         context = super(OrderCreateView, self).get_context_data(**kwargs)
 
         OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=1)
-        queryset = self.object.order_items.select_related('product')
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST, queryset=queryset)
+            formset = OrderFormSet(self.request.POST)
         else:
             basket_items = self.request.user.basket.all()
             if basket_items:
                 OrderFormSet = inlineformset_factory(Order, OrderItem, OrderItemForm, extra=basket_items.count() + 1)
-                formset = OrderFormSet(queryset=queryset)
+                formset = OrderFormSet()
                 for form, basket_item in zip(formset.forms, basket_items):
                     form.initial['product'] = basket_item.product
                     form.initial['quantity'] = basket_item.quantity
@@ -154,3 +153,16 @@ def get_product_price(request, pk):
         })
     else:
         return JsonResponse({'error': 'Что-то пошло не так'})
+
+
+@login_required
+def create_from_basket(request):
+    basket_items = request.user.basket.all()
+    if basket_items:
+        order = Order.objects.create(user=request.user, status=Order.SEND_TO_PROCEED)
+        for basket_item in basket_items:
+            OrderItem.objects.create(order=order, product=basket_item.product, quantity=basket_item.quantity)
+        request.user.basket.all().delete()
+        return HttpResponseRedirect(reverse('ordersapp:read', kwargs={'pk': order.pk}))
+
+    return HttpResponseRedirect(reverse('ordersapp:list'))

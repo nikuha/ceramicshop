@@ -65,11 +65,11 @@ def update_quantity(request, pk):
         quantity = int(request.GET['quantity'])
         quantity_diff = quantity - basket_record.quantity
         if quantity >= 1 and quantity_diff <= basket_record.product.quantity:
-            # basket_record.quantity = quantity
-            basket_record.quantity = F('quantity') + quantity_diff
+            basket_record.quantity = quantity
+            # basket_record.quantity = F('quantity') + quantity_diff
             basket_record.save()
             # print_queries('UPDATE', connection.queries)
-            basket_record.refresh_from_db()
+            # basket_record.refresh_from_db()
         return JsonResponse({
             'product_cost': str(round(basket_record.product_cost)) + '&nbsp;' + settings.CURRENCY_SYMBOL,
             'total_quantity': request.user.basket_total_quantity,

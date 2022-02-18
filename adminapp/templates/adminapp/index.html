@@ -1,8 +1,33 @@
 {% extends 'adminapp/base.html' %}
 
 {% block content %}
-    <div class="margin-top center">
-        <div class="big-title margin-top">Краткая сводка по контенту сайта</div>
-        <div class="margin-top">coming soon...</div>
+    <div class="margin-top ">
+        <div class="big-title margin-top center">Краткая сводка по контенту сайта</div>
+        <div class="row flex-wrap margin-center" style="width: fit-content">
+            <div class="margin-top margin-lr">
+                <div class=""><strong>Категории</strong></div>
+                {% for category in categories %}
+                    <div class="margin-top"><a href="{% url 'adminapp:category_products' category.pk %}">{{ category.name }}</a></div>
+                {% endfor %}
+            </div>
+            <div class="margin-top margin-lr">
+                <div class=""><strong>Последние добавленные товары</strong></div>
+                {% for product in products %}
+                    <div class="margin-top"><a href="{% url 'adminapp:product_update' product.pk %}">{{ product.name }}</a></div>
+                {% endfor %}
+            </div>
+            <div class="margin-top margin-lr">
+                <div class=""><strong>Пользователи</strong></div>
+                {% for user in users %}
+                    <div class="margin-top"><a href="{% url 'adminapp:user_update' user.pk %}">{{ user.first_or_user_name }}</a></div>
+                {% endfor %}
+            </div>
+            <div class="margin-top margin-lr">
+                <div class=""><strong>Контакты</strong></div>
+                {% for contact in contacts %}
+                    <div class="margin-top"><a href="{% url 'adminapp:contact_update' contact.pk %}">{{ contact.city }}</a></div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}

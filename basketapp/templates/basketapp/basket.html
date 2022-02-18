@@ -35,12 +35,19 @@
         {% endfor %}
 
         {% if basket %}
-            <div class="basket-summary">
-                Всего товаров в корзине: <span id="basket_total_quantity">{{ basket|get_total_quantity }}</span> шт.
-            </div>
-            <div class="basket-summary">
-                Общая стоимость:
-                <span id="basket_total_cost">{{ basket|get_total_cost|with_currency }}</span>
+            <div class="row space-between">
+                <div>
+                    <div class="basket-summary">
+                        Всего товаров в корзине: <span id="basket_total_quantity">{{ basket|get_total_quantity }}</span> шт.
+                    </div>
+                    <div class="basket-summary">
+                        Общая стоимость:
+                        <span id="basket_total_cost">{{ basket|get_total_cost|with_currency }}</span>
+                    </div>
+                </div>
+                <div class="a-button green">
+                    <a href="{% url 'ordersapp:create_from_basket' %}">Оформить заказ</a>
+                </div>
             </div>
         {% endif %}
     </div>

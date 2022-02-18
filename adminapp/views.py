@@ -47,6 +47,14 @@ class IndexView(SuperUserOnlyMixin, TemplateView):
     template_name = 'adminapp/index.html'
     page_title = 'Админка'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = ProductCategory.objects.filter(is_active=True).order_by('-pk')
+        context['products'] = Product.objects.filter(is_active=True).order_by('-pk')[:5]
+        context['users'] = User.objects.filter(is_active=True).order_by('-pk')[:5]
+        context['contacts'] = Contact.objects.filter(is_active=True).order_by('-pk')[:5]
+        return context
+
 
 class ProductListView(SuperUserOnlyMixin, ListView):
     model = Product
@@ -138,12 +146,12 @@ class ProductCategoryUpdateView(SuperUserOnlyMixin, PageContextMixin, UpdateView
     success_url = reverse_lazy('adminapp:categories')
     form_class = AdminProductCategoryCreateForm
 
-    def form_valid(self, form):
-        discount = form.cleaned_data['discount']
-        if discount:
-            self.object.product_set.update(price=F('price') * (1 - discount / 100))
-
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     discount = form.cleaned_data['discount']
+    #     if discount:
+    #         self.object.product_set.update(price=F('price') * (1 - discount / 100))
+    #
+    #     return super().form_valid(form)
 
 
 class CategoryToggleActiveView(SuperUserOnlyMixin, ToggleActiveMixin, DeleteView):
