@@ -138,7 +138,7 @@ class OrderDetailView(UserOnlyMixin, PageContextMixin, DetailView):
 @login_required
 def order_forming_complete(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    order.status = Order.SEND_TO_PROCEED
+    order.status = Order.OrderStatusChoices.SEND_TO_PROCEED
     order.save()
     return HttpResponseRedirect(reverse('ordersapp:list'))
 

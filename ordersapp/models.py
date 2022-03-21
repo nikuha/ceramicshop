@@ -8,26 +8,35 @@ from django.dispatch import receiver
 
 
 class Order(models.Model):
-    FORMING = 'FM'
-    SEND_TO_PROCEED = 'STP'
-    PAID = 'PD'
-    PROCEEDED = 'PRD'
-    READY = 'RDY'
-    CANCEL = 'CNC'
+    # FORMING = 'FM'
+    # SEND_TO_PROCEED = 'STP'
+    # PAID = 'PD'
+    # PROCEEDED = 'PRD'
+    # READY = 'RDY'
+    # CANCEL = 'CNC'
+    #
+    # ORDER_STATUS_CHOICES = (
+    #     (FORMING, 'формируется'),
+    #     (SEND_TO_PROCEED, 'отправлен в обработку'),
+    #     (PAID, 'оплачено'),
+    #     (PROCEEDED, 'обрабатывается'),
+    #     (READY, 'готов к выдачи'),
+    #     (CANCEL, 'отмена заказа')
+    # )
 
-    ORDER_STATUS_CHOICES = (
-        (FORMING, 'формируется'),
-        (SEND_TO_PROCEED, 'отправлен в обработку'),
-        (PAID, 'оплачено'),
-        (PROCEEDED, 'обрабатывается'),
-        (READY, 'готов к выдачи'),
-        (CANCEL, 'отмена заказа')
-    )
+    class OrderStatusChoices(models.TextChoices):
+        FORMING = 'FM', 'формируется'
+        SEND_TO_PROCEED = 'STP', 'отправлен в обработку'
+        PAID = 'PD', 'оплачено'
+        PROCEEDED = 'PRD', 'обрабатывается'
+        READY = 'RDY', 'готов к выдачи'
+        CANCEL = 'CNC', 'отмена заказа'
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     created = models.DateTimeField(verbose_name='создан', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='обновлен', auto_now=True)
-    status = models.CharField(choices=ORDER_STATUS_CHOICES, verbose_name='статус', max_length=3, default=FORMING)
+    status = models.CharField(choices=OrderStatusChoices.choices, verbose_name='статус', max_length=3,
+                              default=OrderStatusChoices.FORMING)
     is_active = models.BooleanField(verbose_name='активный', db_index=True, default=True)
 
     def __str__(self):
@@ -35,7 +44,7 @@ class Order(models.Model):
 
     @property
     def is_forming(self):
-        return self.status == self.FORMING
+        return self.status == self.OrderStatusChoices.FORMING
 
     @property
     def total(self):
@@ -72,7 +81,7 @@ class OrderItem(models.Model):
 
     @property
     def get_products(self):
-        return Product.objects.filter(is_active=True, category__is_active=True)\
+        return Product.objects.filter(is_active=True, category__is_active=True) \
             .select_related('category').order_by('category', 'name')
 
 
